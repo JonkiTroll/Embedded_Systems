@@ -24,18 +24,22 @@ int main() {
         if(encoderA.is_hi() && !flag){
             increment++;
             flag = true;
+            led.set_hi();
         } else if (encoderB.is_hi() && !flag) {
             increment--;
             flag = true;
+            led.set_hi();
         } else if (encoderA.is_lo() && encoderB.is_lo()) {
             flag = false;
+            led.set_lo();
         }
-
-        if(increment >= 126){
+            /*
+        if(increment >= 120){
             increment = 0;
             led.toggle();
 
         }
+             */
     }
 
 
