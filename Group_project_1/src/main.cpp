@@ -11,38 +11,49 @@ Digital_out led(5);
 bool flag = false;
 int counter = 0;
 
-ISR(INT0_vect){
-    if(!flag){
-        flag = true;
-        counter++;
-        led.set_hi();
-    }
+void reset(){
+    flag = false;
+    led.set_lo();
 }
 
-ISR(INT1_vect){
+ISR(INT1_vect) {
     if(!flag){
         flag = true;
         counter--;
-        led.set_lo();
+        led.set_hi();
+    } else {
+        reset();
     }
 }
 
+ISR(INT0_vect) {
+    if(!flag){
+    flag = true;
+    counter++;
+    led.set_hi();
+    } else {
+        reset();
+    }
+}
+
+
+
 int main() {
 
-    EICRA |= (1<<ISC11);
+    EICRA |= ((1 << ISC11) | ((1 << ISC10)));
+    EICRA |= ((1 << ISC00) | ((1 << ISC01)));
 
-    EIMSK |= ((1 << INT0) | (1<<INT1));
+    EIMSK |= ((1 << INT0) | (1 << INT1));
 
-    DDRD &= ~((1 << DDD2) | (1 << DDD1));
+    DDRD &= ~((1 << DDD3) | (1 << DDD2));
 
-    PORTB |= ((1 << PIN2) | (1 << PIN1));
+    PORTD |= ((1 << PIN2) | (1 << PIN3));
 
     sei();
 
-    while(true){
-        if(!(PIND & (1<<PIN1)) && !(PIND & (1 << PIN2))){
-            flag = false;
-        }
+    while (true) {
+        // if(!(PIND & (1 << PIN2)) && !(PIND & (1 << PIN3))) {
+
     }
 
 
