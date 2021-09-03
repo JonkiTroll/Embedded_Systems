@@ -20,7 +20,7 @@ ISR(INT1_vect) {
     if(!flag){
         counter--;
         led.set_hi();
-        _delay_us(100);
+        //_delay_us(100);
         flag = true;
     }
 }
@@ -29,7 +29,7 @@ ISR(INT0_vect) {
     if(!flag){
         counter++;
         led.set_hi();
-        _delay_us(100);
+        //_delay_us(100);
         flag = true;
     }
 }
@@ -47,14 +47,14 @@ int main() {
 
     PORTD |= ((1 << PIN2) | (1 << PIN3));       //Enable pull up resistors
 
-    sei();                                      //Enable global interrupts
+    led.init();                                     //Enable global interrupts
+    sei();
 
     while (true) {
-        if(flag) {
-            if (!(PIND << PIN3) && !(PIND << PIN2)) {
+            if ((PIND & (1 << PIN3)) && (PIND & (1 << PIN2))) {
                 reset();
             }
-        }
+
 
     }
 
