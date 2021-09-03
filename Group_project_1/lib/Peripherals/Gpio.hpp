@@ -7,6 +7,7 @@
 
 #include <stdint.h>
 #include <avr/io.h>
+#include <ostream>
 
 enum IO{
     GPIO_Input,
@@ -26,6 +27,12 @@ public:
     void toggle();
     uint8_t getPin() const;
     bool read() const;
+
+    bool operator==(const Gpio &rhs) const;
+
+    bool operator!=(const Gpio &rhs) const;
+
+    friend std::ostream &operator<<(std::ostream &os, const Gpio &gpio);
 
 private:
     uint8_t mPinBit;

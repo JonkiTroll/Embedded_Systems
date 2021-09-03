@@ -18,21 +18,19 @@ void reset(){
 
 ISR(INT1_vect) {
     if(!flag){
-        flag = true;
         counter--;
         led.set_hi();
-    } else {
-        reset();
+        _delay_us(100);
+        flag = true;
     }
 }
 
 ISR(INT0_vect) {
     if(!flag){
-    flag = true;
-    counter++;
-    led.set_hi();
-    } else {
-        reset();
+        counter++;
+        led.set_hi();
+        _delay_us(100);
+        flag = true;
     }
 }
 
@@ -52,6 +50,11 @@ int main() {
     sei();                                      //Enable global interrupts
 
     while (true) {
+        if(flag) {
+            if (!(PIND << PIN3) && !(PIND << PIN2)) {
+                reset();
+            }
+        }
 
     }
 

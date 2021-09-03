@@ -4,7 +4,6 @@
 
 #include "Gpio.hpp"
 
-
 Gpio::Gpio(const uint8_t pin, volatile uint8_t *port, const uint8_t IO) : pin(pin), mPort(port){
 
     mPinBit = (1 << pin); //left bitwies shift to get the bit for the pin
