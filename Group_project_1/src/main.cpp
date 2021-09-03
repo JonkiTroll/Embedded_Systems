@@ -40,19 +40,18 @@ ISR(INT0_vect) {
 
 int main() {
 
-    EICRA |= ((1 << ISC11) | ((1 << ISC10)));
-    EICRA |= ((1 << ISC00) | ((1 << ISC01)));
+    EICRA |= ((1 << ISC11) | ((1 << ISC10)));   //Set interrupt 1 to trigger on the rising edge
+    EICRA |= ((1 << ISC00) | ((1 << ISC01)));   //Set interrupt 0 to trigger on the rising edge
 
-    EIMSK |= ((1 << INT0) | (1 << INT1));
+    EIMSK |= ((1 << INT0) | (1 << INT1));       //Enable interrupt 0 and 1
 
-    DDRD &= ~((1 << DDD3) | (1 << DDD2));
+    DDRD &= ~((1 << DDD3) | (1 << DDD2));       //Set pins which the interrupts are mapped onto as inputs.
 
-    PORTD |= ((1 << PIN2) | (1 << PIN3));
+    PORTD |= ((1 << PIN2) | (1 << PIN3));       //Enable pull up resistors
 
-    sei();
+    sei();                                      //Enable global interrupts
 
     while (true) {
-        // if(!(PIND & (1 << PIN2)) && !(PIND & (1 << PIN3))) {
 
     }
 
