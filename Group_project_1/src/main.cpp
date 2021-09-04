@@ -21,7 +21,7 @@ ISR(INT1_vect) {
     if(!flag){
         counter--;
         led.set_hi();
-        //_delay_us(100);
+       //  _delay_us(20);
         flag = true;
     }
 }
@@ -30,17 +30,15 @@ ISR(INT0_vect) {
     if(!flag){
         counter++;
         led.set_hi();
-        //_delay_us(100);
+        // _delay_us(20);
         flag = true;
     }
 }
 
-
-
 int main() {
 
     EICRA |= ((1 << ISC11) | ((1 << ISC10)));   //Set interrupt 1 to trigger on the rising edge
-    EICRA |= ((1 << ISC00) | ((1 << ISC01)));   //Set interrupt 0 to trigger on the rising edge
+    EICRA |= ((1 << ISC01) | ((1 << ISC00)));   //Set interrupt 0 to trigger on the rising edge
 
     EIMSK |= ((1 << INT0) | (1 << INT1));       //Enable interrupt 0 and 1
 
@@ -53,6 +51,7 @@ int main() {
 
     while (true) {
             if ((PIND & (1 << PIN3)) && (PIND & (1 << PIN2))) {
+                _delay_us(10);
                 reset();
             }
 
