@@ -4,35 +4,16 @@
 
 #include "Gpio.hpp"
 
+Gpio::Gpio(const uint8_t pin, volatile uint8_t *port, const uint8_t IO) : pin(pin), mPort(port){
 
-Gpio::Gpio(const uint8_t pin, const uint8_t IO) : pin(pin){
-
-    uint8_t portPin;
-    volatile uint8_t *initPort;
-
-    if (pin <= 7) {
-        portPin = pin;
-        mPort = &PORTD; //m -> member variable
-        initPort = &DDRD;
-
-    } else if (pin <= 13) {
-        portPin = pin - 8;
-        mPort = &PORTB;
-        initPort = &DDRB;
-    } else {
-        return;
-    }
-
-    mPinBit = (1 << portPin); //left bitwies shift to get the bit for the pin
+    mPinBit = (1 << pin); //left bitwies shift to get the bit for the pin
 
     //Configure the object as either input or output.
     switch (IO) {
         case GPIO_Output:
-            initPort -= 1U; //when configuring to output, the addresses of both ports need to re reduced by 1. Else it won't work
-            mPort -= 1U;
-            *initPort |= mPinBit; //set the
+            *(mPort-1U) |= mPinBit; //set the
         case GPIO_Input:
-            *initPort &= ~mPinBit;
+            *(mPort-1U) &= ~mPinBit;
             this->set(); //enable internal pull-up
         default:
             break;
@@ -71,9 +52,5 @@ uint8_t Gpio::getPin() const{
  * Returns the state of the pin. Mainly used for pins configured as inputs
  */
 bool Gpio::read() const {
-    if(pin <=7) {
-        return PIND & mPinBit;
-    } else {
-        return PINB & mPinBit;
-    }
+        return *(mPort-2U) & mPinBit;
 }

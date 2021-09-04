@@ -17,7 +17,7 @@ class Gpio {
 public:
 
 
-    Gpio(uint8_t pin, uint8_t IO);
+    Gpio(uint8_t pin, volatile uint8_t *port, uint8_t IO);
 
     ~Gpio() = default;;
 

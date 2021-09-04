@@ -12,38 +12,51 @@ Digital_out led(5);
 bool flag = false;
 int counter = 0;
 
-ISR(INT0_vect){
+void reset(){
+    flag = false;
+    led.set_lo();
+}
+
+ISR(INT1_vect) {
     if(!flag){
-        flag = true;
-        counter++;
+        counter--;
         led.set_hi();
+        //_delay_us(100);
+        flag = true;
     }
 }
 
-ISR(INT1_vect){
+ISR(INT0_vect) {
     if(!flag){
+        counter++;
+        led.set_hi();
+        //_delay_us(100);
         flag = true;
-        counter--;
-        led.set_lo();
     }
 }
+
+
 
 int main() {
 
-    EICRA |= (1<<ISC11);
+    EICRA |= ((1 << ISC11) | ((1 << ISC10)));   //Set interrupt 1 to trigger on the rising edge
+    EICRA |= ((1 << ISC00) | ((1 << ISC01)));   //Set interrupt 0 to trigger on the rising edge
 
-    EIMSK |= ((1 << INT0) | (1<<INT1));
+    EIMSK |= ((1 << INT0) | (1 << INT1));       //Enable interrupt 0 and 1
 
-    DDRD &= ~((1 << DDD2) | (1 << DDD1));
+    DDRD &= ~((1 << DDD3) | (1 << DDD2));       //Set pins which the interrupts are mapped onto as inputs.
 
-    PORTB |= ((1 << PIN2) | (1 << PIN1));
+    PORTD |= ((1 << PIN2) | (1 << PIN3));       //Enable pull up resistors
 
+    led.init();                                     //Enable global interrupts
     sei();
 
-    while(true){
-        if(!(PIND & (1<<PIN1)) && !(PIND & (1 << PIN2))){
-            flag = false;
-        }
+    while (true) {
+            if ((PIND & (1 << PIN3)) && (PIND & (1 << PIN2))) {
+                reset();
+            }
+
+
     }
 
 
