@@ -1,6 +1,6 @@
 //
 // Created by group on 8/18/21.
-// 
+//
 //
 #include <util/delay.h>
 #include "digital_in.h"
@@ -12,25 +12,23 @@ Digital_out led(5);
 bool flag = false;
 int counter = 0;
 
-void reset(){
+void reset() {
     flag = false;
     led.set_lo();
 }
 
 ISR(INT1_vect) {
-    if(!flag){
+    if (!flag) {
         counter--;
         led.set_hi();
-       //  _delay_us(20);
         flag = true;
     }
 }
 
 ISR(INT0_vect) {
-    if(!flag){
+    if (!flag) {
         counter++;
         led.set_hi();
-        // _delay_us(20);
         flag = true;
     }
 }
@@ -46,16 +44,14 @@ int main() {
 
     PORTD |= ((1 << PIN2) | (1 << PIN3));       //Enable pull up resistors
 
-    led.init();                                     //Enable global interrupts
-    sei();
+    led.init();                                 //Initialize led
+    sei();                                      //Enable global interrupts
 
     while (true) {
-            if ((PIND & (1 << PIN3)) && (PIND & (1 << PIN2))) {
-                _delay_us(10);
-                reset();
-            }
-
-
+        if ((PIND & (1 << PIN3)) && (PIND & (1 << PIN2))) {
+            _delay_us(10);
+            reset();
+        }
     }
 
 
