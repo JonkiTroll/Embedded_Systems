@@ -33,14 +33,15 @@ void encoder::update_count(){
  */
 double encoder::calculate_speed() {
 
-        int32_t old_count = count, speed;
+        int32_t old_count = count;
+        static int32_t speed;
 
-        _delay_ms(10); //Currently just polls. Would prefer to set a single shot timer.
+        _delay_ms(100); //Currently just polls. Would prefer to set a single shot timer.
 
-        if(abs(count) > abs(old_count)) {
-            speed = (count - old_count) * 100;
+        if(abs(count) >= abs(old_count)) {
+            speed = (count - old_count) * 10;
         } else {
-            speed = (count - (old_count + PPR));
+            speed = (count - (old_count + PPR)) * 10; //Only works in positive direction. should be -PPR for negative
         }
         return speed;
 }
