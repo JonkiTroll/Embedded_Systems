@@ -1,5 +1,5 @@
 //
-// Created by group 2 on 15/09/21.
+// Created by group on 8/18/21.
 //
 //
 #ifndef TEST
@@ -16,7 +16,6 @@
 
 encoder motor;
 double speed;
-
 /*
 timer_ms timer1(TIMER_INTERVAL);
 
@@ -29,7 +28,7 @@ ISR(TIMER1_COMPB_vect) {
 }
 */
 ISR(INT0_vect) {
-    motor.calc_speed_micros(micros());
+    motor.update_count();
 }
 
 
@@ -55,9 +54,9 @@ void setup(){
 
 void loop(){
     _delay_ms(2000);
-    //speed = motor.calculate_speed();
+    speed = motor.calculate_speed();
     Serial.print("pulses per second: ");
-    Serial.println(motor.getPPS());
+    Serial.println(speed);
 }
 
 #endif

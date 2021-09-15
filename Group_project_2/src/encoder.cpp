@@ -46,4 +46,25 @@ double encoder::calculate_speed() {
         return speed;
 }
 
+void encoder::calc_speed_micros(uint16_t time_micros)
+{
+    uint16_t micros = time_micros - old_time_micros;
+    old_time_micros = time_micros;
+
+    PPS =  1000000/micros;
+    if (!(PIND & (1 << PIN3)))
+    {
+        PPS = -PPS;
+    }
+}
+
+int encoder::getPPS()
+{
+    if (PPS < 100 && PPS > -100)
+    {
+        PPS = 0;
+    }
+
+    return PPS;
+}
 
