@@ -2,8 +2,6 @@
 // Created by group 2 on 15/09/21.
 //
 //
-#ifndef TEST
-#define TEST
 
 #include "Arduino.h"
 #include <util/delay.h>
@@ -60,7 +58,7 @@ void loop(){
     Serial.println(motor.getPPS());
 }
 
-#endif
+
 /*
  *  ARDUINO Format:
  *
