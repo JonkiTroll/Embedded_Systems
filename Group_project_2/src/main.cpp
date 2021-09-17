@@ -2,8 +2,6 @@
 // Created by group 2 on 15/09/21.
 //
 //
-#ifndef TEST
-#define TEST
 
 #include "Arduino.h"
 #include <util/delay.h>
@@ -39,6 +37,8 @@ void setup(){
     //Serial.begin(115200);
     Serial.begin(9600); //Nano speed
 
+    DDRB |= ((1 << PIN2) | (1 << PIN3));
+
     EICRA |= ((1 << ISC01) | ((1 << ISC00)));   //Set interrupt 0 to trigger on the rising edge
 
     EIMSK |= (1 << INT0);       //Enable interrupt 0 and 1
@@ -49,18 +49,27 @@ void setup(){
 
     PORTD |= ((1 << PIN2) | (1 << PIN3));       //Enable pull up resistors
 
+    PORTB &= ~(1<<PIN3);
+
+    PORTB |= (1 << PIN2);
+
+
     sei();                                    //Enable global interrupts
 
 }
 
 void loop(){
-    _delay_ms(2000);
+    _delay_ms(500);
     //speed = motor.calculate_speed();
     Serial.print("pulses per second: ");
-    Serial.println(motor.getPPS());
+    Serial.print(motor.getPPS());
+    Serial.print("\n\r");
+    Serial.print("average pulses per second: ");
+    Serial.print(motor.calculate_average());
+    Serial.print("\n\r");
+
 }
 
-#endif
 /*
  *  ARDUINO Format:
  *
