@@ -9,6 +9,7 @@
 encoder::encoder() {
 
     count = 0;
+    head = 0;
 
 }
 
@@ -46,25 +47,44 @@ double encoder::calculate_speed() {
         return speed;
 }
 
+int encoder::calculate_average() {
+    int sum = 0;
+
+    for(int i = 0; i < 5; i++) {
+        sum = sum + PPS[i];
+    }
+    return sum/5;
+}
+
 void encoder::calc_speed_micros(uint16_t time_micros)
 {
     uint16_t micros = time_micros - old_time_micros;
     old_time_micros = time_micros;
+    int current_PPS = 1000000/micros;
 
-    PPS =  1000000/micros;
     if (!(PIND & (1 << PIN3)))
     {
-        PPS = -PPS;
+        current_PPS = -current_PPS;
     }
+
+    PPS[head] = current_PPS;
+
+    if(head == 4){
+        head = 0;
+    }
+
+    head++;
 }
 
 int encoder::getPPS()
 {
-    if (PPS < 100 && PPS > -100)
+    int current_PPS = PPS[head];
+
+    if (current_PPS < 100 && current_PPS > -100)
     {
-        PPS = 0;
+        current_PPS = 0;
     }
 
-    return PPS;
+    return current_PPS;
 }
 
