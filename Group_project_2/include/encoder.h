@@ -20,8 +20,11 @@ private:
     const int32_t PPR = 700; //Pulses per revolution. Replace with actual pulses per revolution
     int32_t count;
     uint32_t old_time_micros;
+    uint8_t N = 5;
     int PPS[5] = {0, 0, 0, 0, 0};
     uint8_t head;
+    int16_t cum_sum = 0;
+    
 };
 
 

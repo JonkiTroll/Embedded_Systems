@@ -59,7 +59,7 @@ void setup(){
 }
 
 void loop(){
-    _delay_ms(500);
+    _delay_ms(1500);
     //speed = motor.calculate_speed();
     Serial.print("pulses per second: ");
     Serial.print(motor.getPPS());
