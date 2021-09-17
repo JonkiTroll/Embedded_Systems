@@ -11,6 +11,7 @@ class encoder {
 public:
     encoder();
 
+    void init(int pin1, int pin2);
     void update_count();
     double calculate_speed();
     void calc_speed_micros(uint16_t time_micros);
@@ -21,9 +22,9 @@ private:
     int32_t count;
     uint32_t old_time_micros;
     uint8_t N = 5;
-    int PPS[5] = {0, 0, 0, 0, 0};
+    int16_t PPS[5] = {0, 0, 0, 0, 0};
     uint8_t head;
-    int16_t cum_sum = 0;
+    int32_t cum_sum = 0;
     
 };
 

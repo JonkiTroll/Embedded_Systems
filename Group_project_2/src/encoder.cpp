@@ -62,16 +62,7 @@ int encoder::calculate_average()
     //    sum = sum + PPS[i];
     //}
     //return sum / N;
-    int current_PPS = 0;
-    if (head == 0)
-    {
-        current_PPS = PPS[N - 1];
-    }
-    else
-    {
-        current_PPS = PPS[head - 1];
-    }
-
+    int current_PPS = PPS[head];
     if (current_PPS < 100 && current_PPS > -100)
     {
         return 0;
@@ -93,21 +84,26 @@ void encoder::calc_speed_micros(uint16_t time_micros)
         current_PPS = -current_PPS;
     }
 
-    PPS[head] = current_PPS;
-    if (head == 0)
-    {
-        cum_sum = cum_sum + current_PPS - PPS[N - 1];
-    }
-    else
-    {
-        cum_sum = cum_sum + current_PPS - PPS[head - 1];
-    }
-    if (head == (N - 1))
+    if (head >= (N - 1))
     {
         head = 0;
     }
+    else
+    {
+        head++;
+    }
 
-    head++;
+    PPS[head] = current_PPS;
+    if (head == (N - 1))
+    {
+        cum_sum = cum_sum + current_PPS;
+        cum_sum = cum_sum - PPS[0];
+    }
+    else
+    {
+        cum_sum = cum_sum + current_PPS;
+        cum_sum = cum_sum - PPS[head + 1];
+    }
 }
 
 int encoder::getPPS()

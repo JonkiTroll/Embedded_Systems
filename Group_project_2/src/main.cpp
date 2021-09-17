@@ -59,15 +59,15 @@ void setup(){
 }
 
 void loop(){
-    _delay_ms(1500);
+    _delay_ms(250);
     //speed = motor.calculate_speed();
-    Serial.print("pulses per second: ");
-    Serial.print(motor.getPPS());
-    Serial.print("\n\r");
-    Serial.print("average pulses per second: ");
+    //Serial.print("pulses per second: ");
+    //Serial.print(motor.getPPS());
+    //Serial.print("\n\r");
+    //Serial.print("average pulses per second: ");
     Serial.print(motor.calculate_average());
     Serial.print("\n\r");
-
+    // 1250 - 1288 (1295)
 }
 
 
