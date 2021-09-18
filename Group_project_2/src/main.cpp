@@ -26,50 +26,40 @@ ISR(TIMER1_COMPB_vect) {
 
 }
 */
-ISR(INT0_vect) {
+ISR(INT0_vect)
+{
     motor.calc_speed_micros(micros());
 }
 
-
-
-void setup(){
+void setup()
+{
 
     //Serial.begin(115200);
     Serial.begin(9600); //Nano speed
+    motor.init(PIN2, PIN3, 0);
 
-    DDRB |= ((1 << PIN2) | (1 << PIN3));
-
-    EICRA |= ((1 << ISC01) | ((1 << ISC00)));   //Set interrupt 0 to trigger on the rising edge
-
-    EIMSK |= (1 << INT0);       //Enable interrupt 0 and 1
-
-    DDRD &= ~((1 << DDD3) | (1 << DDD2));       //Set pins which the interrupt  s are mapped onto as inputs.
-
-    PORTD |= ((1 << PIN2) | (1 << PIN3));
-
-    PORTD |= ((1 << PIN2) | (1 << PIN3));       //Enable pull up resistors
-
-    PORTB &= ~(1<<PIN3);
-
-    PORTB |= (1 << PIN2);
-
-
-    sei();                                    //Enable global interrupts
-
+    sei(); //Enable global interrupts
 }
 
-void loop(){
-    _delay_ms(250);
+void loop()
+{
+    //_delay_ms(250);
     //speed = motor.calculate_speed();
     //Serial.print("pulses per second: ");
     //Serial.print(motor.getPPS());
     //Serial.print("\n\r");
     //Serial.print("average pulses per second: ");
-    Serial.print(motor.calculate_average());
-    Serial.print("\n\r");
+    //Serial.println(motor.calculate_average());
+    
+    //Serial.print("\n\r");
     // 1250 - 1288 (1295)
+    motor.turn_on();
+    _delay_ms(100);
+    Serial.println(motor.tau);
+    _delay_ms(250);
+    motor.turn_off();
+    _delay_ms(1000);
 }
-
 
 /*
  *  ARDUINO Format:
