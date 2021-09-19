@@ -10,7 +10,7 @@
 class encoder
 {
 public:
-    encoder();
+    encoder() : DRV_PIN1(0), DRV_PIN2(0) {}
 
     void init(int pin1, int pin2, int interrupt_pin);
     void turn_on();

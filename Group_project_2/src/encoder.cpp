@@ -9,10 +9,6 @@
 
 //#define DEBUG
 
-encoder::encoder()
-{
-
-}
 /*
  * Initialize both the interrupts and GPIO pins used to control the motor. The GPIO pins are on PORTB.
  */
