@@ -122,6 +122,13 @@ void encoder::calc_speed_micros(uint32_t time_micros)
  * Returns the most recently calculated Pulses per second.
  */
 
+void encoder::update_speed(double new_speed){
+
+    auto dutyCycle = static_cast<uint16_t>((new_speed/top_speed)*100.0);
+
+    timer1.setDutyCycle(dutyCycle); //tekur gildi milli 7 og 95
+}
+
 int encoder::getPPS() const
 {
     int current_PPS = PPS[head];
@@ -138,4 +145,14 @@ int encoder::getPPS() const
  */
 uint32_t encoder::getTau() const {
     return tau;
+}
+
+ISR(TIMER1_COMPA_vect){
+
+    PORTB |= (1 << DRV_PIN2);
+}
+
+ISR(TIMER1_COMPB_vect){
+
+    PORTB &= ~(1 << DRV_PIN1);
 }

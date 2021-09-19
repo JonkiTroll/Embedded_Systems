@@ -3,16 +3,27 @@
 //
 
 #pragma once
+#include <math.h>
 
 class P_controller {
 public:
-    P_controller(double K) : K_p(K){}
+    P_controller(double K, double T) : K_p(K), threshold(T){}
 
     double update(double ref, double actual){
-        return K_p*(actual-ref);
+
+        double speed = K_p*(ref-actual) + ref;
+
+        if (fabs(speed) > threshold) {
+            old_speed = speed;
+            return speed;
+        } else {
+            return old_speed;
+        }
     }
 
 private:
+    double old_speed;
     const double K_p;
+    const double threshold;
 };
 

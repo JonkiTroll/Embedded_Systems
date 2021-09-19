@@ -11,25 +11,22 @@
 
 #include <avr/interrupt.h>
 #include "encoder.h"
-
-#define TIMER_INTERVAL 1000
+#include "P_controller.h"
+#include "timer_8bit.h"
+#define TIMER_INTERVAL_MS 30
 
 
 
 encoder motor;
-double speed;
+P_controller speed_controller(0.5, 0.1);
 
-/*
-timer_ms timer1(TIMER_INTERVAL);
+timer_8bit timer0(TIMER_INTERVAL_MS);
 
-ISR(TIMER1_COMPA_vect) {
-
+ISR(TIMER0_COMPA_vect) {
+    double updated_speed = speed_controller.update(1000, motor.getPPS());
+    motor.update_speed(updated_speed);
 }
 
-ISR(TIMER1_COMPB_vect) {
-
-}
-*/
 ISR(INT0_vect)
 {
     motor.calc_speed_micros(micros());
@@ -41,7 +38,7 @@ void setup()
     //Serial.begin(115200);
     Serial.begin(9600); //Nano speed
     motor.init(PIN2, PIN3, 0);
-
+    timer0.init();
     sei(); //Enable global interrupts
 }
 
