@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include "Arduino.h"
 #include <math.h>
 
 class P_controller {
@@ -13,7 +14,9 @@ public:
 
         double speed = K_p*(ref-actual) + ref;
 
-        if (fabs(speed) > threshold) {
+        double error = fabs((ref-actual)/ref);
+
+        if (error > threshold) {
             old_speed = speed;
             return speed;
         } else {

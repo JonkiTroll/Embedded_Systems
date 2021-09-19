@@ -7,7 +7,6 @@
 
 #include "Arduino.h"
 #include <util/delay.h>
-#include "timer_ms.h"
 
 #include <avr/interrupt.h>
 #include "encoder.h"
@@ -17,13 +16,23 @@
 
 
 
-encoder motor;
+encoder motor(10, 20);
 P_controller speed_controller(0.5, 0.1);
 
 timer_8bit timer0(TIMER_INTERVAL_MS);
 
+ISR(TIMER1_COMPA_vect){
+
+    PORTB |= (1 << motor.getDRV_PIN2());
+}
+
+ISR(TIMER1_COMPB_vect){
+
+    PORTB &= ~(1 << motor.getDRV_PIN2());
+}
+
 ISR(TIMER0_COMPA_vect) {
-    double updated_speed = speed_controller.update(1000, motor.getPPS());
+    double updated_speed = speed_controller.update(500, motor.get_average());
     motor.update_speed(updated_speed);
 }
 
@@ -39,6 +48,7 @@ void setup()
     Serial.begin(9600); //Nano speed
     motor.init(PIN2, PIN3, 0);
     timer0.init();
+    motor.turn_on();
     sei(); //Enable global interrupts
 }
 
@@ -54,13 +64,18 @@ void loop()
     
     //Serial.print("\n\r");
     // 1250 - 1288 (1295)
-
+/*
     motor.turn_on();
     _delay_ms(100);
     Serial.println(motor.getTau());
     _delay_ms(250);
     motor.turn_off();
     _delay_ms(1000);
+*/
+    _delay_ms(100);
+    Serial.println(motor.get_average());
+
+
 }
 
 /*

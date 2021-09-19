@@ -25,6 +25,8 @@ public:
 
         TCCR0B |= (1 << CS00) | (0 << CS01) | (1 << CS02);
 
+        TIMSK0 |= (1 << OCIE0A);
+
     }
 private:
     uint16_t interval;
