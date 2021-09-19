@@ -13,7 +13,9 @@ encoder::encoder()
 {
 
 }
-
+/*
+ * Initialize both the interrupts and GPIO pins used to control the motor. The GPIO pins are on PORTB.
+ */
 void encoder::init(int pin1, int pin2, int interrupt_number)
 {
     if (interrupt_number == 0)
@@ -41,6 +43,10 @@ void encoder::init(int pin1, int pin2, int interrupt_number)
     DRV_PIN2 = pin2;
 }
 
+/*
+ * Turn the DC motor on.
+ */
+
 void encoder::turn_on()
 {
     PORTB &= ~(1 << DRV_PIN1);
@@ -53,11 +59,22 @@ void encoder::turn_on()
 #endif
 }
 
+/*
+ * Turn the DC motor off.
+ */
+
 void encoder::turn_off()
 {
     PORTB &= ~((1 << DRV_PIN1) | (1 << DRV_PIN2)); // all pins to high except pins for high values.
-    measurement = false;
+    measurement = false; //Signal to the program that the time constant can be measured again
 }
+
+/*
+ * Calculates the pulses per seconds as well as the average over 10 values. Does so by taking in the currently elapsed
+ * time in micro seconds and subtracts it from the last time the function was called and converts to seconds to get the
+ * frequency. This function should be placed in an interrupt service routine where an interrupt is called at either the
+ * rising or falling edge of the pulse count.
+ */
 
 void encoder::calc_speed_micros(uint32_t time_micros)
 {
@@ -67,12 +84,13 @@ void encoder::calc_speed_micros(uint32_t time_micros)
 
     if (current_PPS >= 794 && !measurement) //794 is 63% of 1260
     {
-        #ifdef DEBUG
+#ifdef DEBUG
         Serial.print("end: ");
         Serial.println(time_micros);
         Serial.print("tau: ");
         Serial.println(tau);
-        #endif
+#endif
+
         tau = time_micros - curr_time;
         measurement = true;
     }
@@ -104,6 +122,10 @@ void encoder::calc_speed_micros(uint32_t time_micros)
     }
 }
 
+/*
+ * Returns the most recently calculated Pulses per second.
+ */
+
 int encoder::getPPS() const
 {
     int current_PPS = PPS[head];
@@ -115,7 +137,9 @@ int encoder::getPPS() const
 
     return current_PPS;
 }
-
+/*
+ * Returns the most recently measured time constant
+ */
 uint32_t encoder::getTau() const {
     return tau;
 }

@@ -24,7 +24,7 @@ private:
     bool measurement = false;
     unsigned long curr_time = 0;
     uint32_t old_time_micros = 0;
-    uint8_t N = 10;
+    const uint8_t N = 10;
     int16_t PPS[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     uint8_t head = 0;
     int32_t cum_sum = 0;
