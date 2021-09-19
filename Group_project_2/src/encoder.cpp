@@ -7,11 +7,11 @@
 #include <stdlib.h>
 #include <Arduino.h>
 
+//#define DEBUG
+
 encoder::encoder()
 {
 
-    count = 0;
-    head = 0;
 }
 
 void encoder::init(int pin1, int pin2, int interrupt_number)
@@ -46,7 +46,11 @@ void encoder::turn_on()
     PORTB &= ~(1 << DRV_PIN1);
 
     PORTB |= (1 << DRV_PIN2);
-    tau = micros();
+    curr_time = micros();
+#ifdef DEBUG
+    Serial.print("start: ");
+    Serial.println(curr_time);
+#endif
 }
 
 void encoder::turn_off()
@@ -55,71 +59,7 @@ void encoder::turn_off()
     measurement = false;
 }
 
-void encoder::change_dir()
-{
-    PORTB = PORTB ^ ((1 << DRV_PIN1) | (1 << DRV_PIN2));
-}
-
-/*
- * Update the pulse ocunt. Should be called via external ISR to PIN2.
- */
-
-void encoder::update_count()
-{
-
-    if (!(PIND & (1 << PIN3)))
-        count++;
-    else
-        count--;
-
-    if (abs(count) > PPR)
-    {
-        count = 0;
-    }
-}
-/*
- * Calculate the speed of the motor in pulses per revolution. This is per revolution of the wheel, not the motor axle.
- */
-double encoder::calculate_speed()
-{
-
-    int32_t old_count = count;
-    static int32_t speed;
-
-    _delay_ms(100); //Currently just polls. Would prefer to set a single shot timer.
-
-    if (abs(count) >= abs(old_count))
-    {
-        speed = (count - old_count) * 10;
-    }
-    else
-    {
-        speed = (count - (old_count + PPR)) * 10; //Only works in positive direction. should be -PPR for negative
-    }
-    return speed;
-}
-
-int encoder::calculate_average()
-{
-    //int16_t sum = 0;
-
-    //for (int i = 0; i < N; i++)
-    //{
-    //    sum = sum + PPS[i];
-    //}
-    //return sum / N;
-    int current_PPS = PPS[head];
-    if (current_PPS < 100 && current_PPS > -100)
-    {
-        return 0;
-    }
-    else
-    {
-        return cum_sum / (N - 1);
-    }
-}
-
-void encoder::calc_speed_micros(uint16_t time_micros)
+void encoder::calc_speed_micros(uint32_t time_micros)
 {
     uint16_t micros = time_micros - old_time_micros;
     old_time_micros = time_micros;
@@ -127,7 +67,13 @@ void encoder::calc_speed_micros(uint16_t time_micros)
 
     if (current_PPS >= 794 && !measurement) //794 is 63% of 1260
     {
-        tau = time_micros - tau;
+        #ifdef DEBUG
+        Serial.print("end: ");
+        Serial.println(time_micros);
+        Serial.print("tau: ");
+        Serial.println(tau);
+        #endif
+        tau = time_micros - curr_time;
         measurement = true;
     }
 
@@ -158,7 +104,7 @@ void encoder::calc_speed_micros(uint16_t time_micros)
     }
 }
 
-int encoder::getPPS()
+int encoder::getPPS() const
 {
     int current_PPS = PPS[head];
 
@@ -168,4 +114,8 @@ int encoder::getPPS()
     }
 
     return current_PPS;
+}
+
+uint32_t encoder::getTau() const {
+    return tau;
 }

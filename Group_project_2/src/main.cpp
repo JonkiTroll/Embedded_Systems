@@ -3,6 +3,8 @@
 //
 //
 
+
+
 #include "Arduino.h"
 #include <util/delay.h>
 #include "timer_ms.h"
@@ -11,6 +13,8 @@
 #include "encoder.h"
 
 #define TIMER_INTERVAL 1000
+
+
 
 encoder motor;
 double speed;
@@ -53,9 +57,10 @@ void loop()
     
     //Serial.print("\n\r");
     // 1250 - 1288 (1295)
+
     motor.turn_on();
     _delay_ms(100);
-    Serial.println(motor.tau);
+    Serial.println(motor.getTau());
     _delay_ms(250);
     motor.turn_off();
     _delay_ms(1000);
