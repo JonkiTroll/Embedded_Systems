@@ -65,7 +65,7 @@ void encoder::calc_speed_micros(uint32_t time_micros)
     old_time_micros = time_micros;
     int current_PPS = 1000000 / micros;
 
-    if (current_PPS >= 794 && !measurement) //794 is 63% of 1260
+    if (current_PPS >= 800 && !measurement) //800 is 63% of 1266
     {
         #ifdef DEBUG
         Serial.print("end: ");
