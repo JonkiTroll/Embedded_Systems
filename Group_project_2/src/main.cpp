@@ -32,7 +32,7 @@ ISR(TIMER1_COMPB_vect){
 }
 
 ISR(TIMER0_COMPA_vect) {
-    double updated_speed = speed_controller.update(500, motor.get_average());
+    double updated_speed = speed_controller.update(500, static_cast<double>(motor.get_average()));
     motor.update_speed(updated_speed);
 }
 
