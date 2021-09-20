@@ -10,12 +10,14 @@
 
 class P_controller {
 public:
-    P_controller(double K, double T) :
-    K_p(K), threshold(T), limMax(1200), limMin(100) {}
+    P_controller(double K, double T, int32_t max_limit, int32_t min_limit) :
+    K_p(K), threshold(T), limMax(max_limit), limMin(min_limit) {
 
-    int16_t update(int16_t ref, int16_t actual){
+    }
 
-        auto speed = static_cast<int16_t>(K_p*(ref-actual)+actual);
+    int32_t update(int16_t ref, int16_t actual){
+
+        auto speed = static_cast<int32_t>(K_p*(ref-actual));
 #ifdef DEBUG
         Serial.print("actual speed: ");
         Serial.println(actual);
@@ -44,9 +46,9 @@ public:
     }
 
 private:
-    int16_t old_speed;
+    int32_t old_speed;
     const double K_p;
     const double threshold;
-    const int16_t limMax, limMin;
+    const int32_t limMax, limMin;
 };
 
