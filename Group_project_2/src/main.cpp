@@ -22,18 +22,16 @@ double Kp = 1.0; //If K_p is = 2.0 and reference speed to 1000, the output oscil
 
 uint16_t counter = 0;
 
-encoder motor(period_ms, 0);
+encoder motor(PIN2, PIN3, period_ms, 0);
 P_controller speed_controller(Kp, error_threshold, 1200, 100);
-Digital_out led(5);
+Digital_out led(5), driver_pin2(motor.getDRV_PIN2());
 
 ISR(TIMER1_COMPA_vect){
-        PORTB |= (1 << motor.getDRV_PIN2());
-
+        driver_pin2.set_hi();
 }
 
 ISR(TIMER1_COMPB_vect){
-        PORTB &= ~(1 << motor.getDRV_PIN2());
-
+        driver_pin2.set_lo();
 }
 
 
@@ -52,7 +50,7 @@ void setup()
     //Serial.begin(115200);
     led.init();
     Serial.begin(9600); //Nano speed
-    motor.init(PIN2, PIN3, interrupt_pin);
+    motor.init(interrupt_pin);
     motor.turn_on();
    // sei(); //Enable global interrupts
 }

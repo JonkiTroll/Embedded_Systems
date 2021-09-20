@@ -12,7 +12,7 @@
 /*
  * Initialize both the interrupts and GPIO pins used to control the motor. The GPIO pins are on PORTB.
  */
-void encoder::init(int pin1, int pin2, int interrupt_number)
+void encoder::init(int interrupt_number)
 {
     if (interrupt_number == 0)
     {
@@ -34,9 +34,7 @@ void encoder::init(int pin1, int pin2, int interrupt_number)
     PORTD |= ((1 << PIN2) | (1 << PIN3)); //Enable pull up resistors
 
     // Here below is are the pins output for controlling of the motor.
-    DDRB |= ((1 << pin1) | (1 << pin2));  // Set pins
-    DRV_PIN1 = pin1;
-    DRV_PIN2 = pin2;
+    DDRB |= ((1 << DRV_PIN1) | (1 << DRV_PIN2));  // Set pins
 
     timer1.init();
 }

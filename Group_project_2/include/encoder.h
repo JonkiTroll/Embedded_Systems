@@ -16,12 +16,13 @@
 class encoder
 {
 public:
-    encoder() : DRV_PIN1(0), DRV_PIN2(0), timer1(0, 100) {}
-    encoder(uint16_t intervalMs, uint16_t dutyCycle)
-    : DRV_PIN1(0), DRV_PIN2(0), timer1(intervalMs, dutyCycle) {}
+    encoder(uint8_t driver_pin1, uint8_t driver_pin2)
+    : DRV_PIN1(driver_pin1), DRV_PIN2(driver_pin2), timer1(0, 100) {}
+    encoder(uint8_t driver_pin1, uint8_t driver_pin2, uint16_t intervalMs, uint16_t dutyCycle)
+    : DRV_PIN1(driver_pin1), DRV_PIN2(driver_pin2), timer1(intervalMs, dutyCycle) {}
 
 
-    void init(int pin1, int pin2, int interrupt_pin);
+    void init(int interrupt_pin);
     void turn_on();
     void turn_off();
     void calc_speed_micros(uint32_t time_micros);
