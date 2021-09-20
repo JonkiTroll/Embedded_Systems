@@ -14,32 +14,34 @@
 #include "P_controller.h"
 #include <stdint.h>
 
-double error_threshold = 0.1;
+double error_threshold = 0.05;
 int period_ms = 10;
-uint8_t interrupt_pin = 1;
+uint8_t interrupt_pin = 0;
 uint32_t duty = 60;
 double Kp = 1.0; //If K_p is = 2.0 and reference speed to 1000, the output oscillates
 
 uint16_t counter = 0;
 
-encoder motor(period_ms, interrupt_pin);
+encoder motor(period_ms, 0);
 P_controller speed_controller(Kp, error_threshold, 1200, 100);
 Digital_out led(5);
 
 ISR(TIMER1_COMPA_vect){
-    PORTB |= (1 << motor.getDRV_PIN2());
+        PORTB |= (1 << motor.getDRV_PIN2());
+
 }
 
 ISR(TIMER1_COMPB_vect){
-    PORTB &= ~(1 << motor.getDRV_PIN2());
+        PORTB &= ~(1 << motor.getDRV_PIN2());
+
 }
 
 
 ISR(INT0_vect)
 {
     motor.calc_speed_micros(micros());
-    if(motor.getPulseCounter() > 700 || motor.getPulseCounter() < -700) {
-        motor.setPulseCounter(0);
+    if(motor.get_pulse_counter() > 700 || motor.get_pulse_counter() < -700) {
+        motor.set_pulse_counter(0);
         led.toggle(); //should blink at roughly 1 second interval
     }
 }
@@ -50,7 +52,7 @@ void setup()
     //Serial.begin(115200);
     led.init();
     Serial.begin(9600); //Nano speed
-    motor.init(PIN2, PIN3, 0);
+    motor.init(PIN2, PIN3, interrupt_pin);
     motor.turn_on();
    // sei(); //Enable global interrupts
 }
@@ -70,7 +72,7 @@ void loop()
 /*
     motor.turn_on();
     _delay_ms(100);
-    Serial.println(motor.getTau());
+    Serial.println(motor.get_tau());
     _delay_ms(250);
     motor.turn_off();
     _delay_ms(1000);

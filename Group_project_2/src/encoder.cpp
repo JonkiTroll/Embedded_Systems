@@ -130,6 +130,22 @@ void encoder::calc_speed_micros(uint32_t time_micros)
 
 void encoder::update_speed(int32_t new_speed){
 
+    /*
+    if(new_speed < 0) {
+        isgoingForward = false;
+        new_speed = -new_speed;
+
+    }   else {
+        isgoingForward = true;
+    }
+    */
+
+
+    if ( new_speed > 1200) {
+        new_speed =  1200;
+    } else if (new_speed < 100) {
+        new_speed = 100;
+    }
     //calculate duty cycle as a percentage.
     auto dutyCycle = static_cast<uint16_t>(100*new_speed/top_speed);
 
@@ -168,11 +184,17 @@ uint16_t encoder::getPPS() const
 /*
  * Returns the most recently measured time constant
  */
-uint32_t encoder::getTau() const {
+uint32_t encoder::get_tau() const {
     return tau;
 }
 /*
- * getter for the driver pin.
+ * getter for the driver pin1.
+ */
+uint8_t encoder::getDRV_PIN1() const{
+    return DRV_PIN1;
+}
+/*
+ * getter for the driver pin2.
  */
 uint8_t encoder::getDRV_PIN2() const{
     return DRV_PIN2;
@@ -181,10 +203,16 @@ uint8_t encoder::getDRV_PIN2() const{
  * returns pulse counter
  */
 
-int16_t encoder::getPulseCounter() const {
+int16_t encoder::get_pulse_counter() const {
     return pulse_counter;
 }
-
-void encoder::setPulseCounter(int16_t new_value) {
+/*
+ * Sets the pulse counter to a new value
+ */
+void encoder::set_pulse_counter(int16_t new_value) {
     pulse_counter = new_value;
+}
+
+bool encoder::is_going_forward() const {
+    return isgoingForward;
 }

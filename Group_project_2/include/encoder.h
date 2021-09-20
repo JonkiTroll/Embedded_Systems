@@ -28,15 +28,18 @@ public:
     uint16_t getPPS() const;
     void update_speed(int32_t new_speed);
     int16_t get_average() const;
-    int16_t getPulseCounter() const;
-    void setPulseCounter(int16_t new_value);
+    int16_t get_pulse_counter() const;
+    void set_pulse_counter(int16_t new_value);
     uint8_t getDRV_PIN2() const;
+    uint8_t getDRV_PIN1() const;
 
-    uint32_t getTau() const;
+    uint32_t get_tau() const;
+    bool is_going_forward() const;
 
 private:
 
     bool measurement = false;
+    bool isgoingForward = true;
     unsigned long curr_time = 0;
     uint32_t old_time_micros = 0;
     const uint8_t N = ARRAY_LENGTH;

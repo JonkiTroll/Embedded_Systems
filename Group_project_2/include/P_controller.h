@@ -11,7 +11,7 @@
 class P_controller {
 public:
     P_controller(double K, double T, int32_t max_limit, int32_t min_limit) :
-    K_p(K), threshold(T), limMax(max_limit), limMin(min_limit) {
+    K_p(K), threshold(T){
 
     }
 
@@ -31,11 +31,6 @@ public:
         Serial.print("Error: ");
         Serial.println(error);
 #endif
-        if ( speed > limMax) {
-            return limMax;
-        } else if (speed < limMin) {
-            return limMin;
-        }
 
         if (error > threshold) {
             old_speed = speed;
@@ -49,6 +44,5 @@ private:
     int32_t old_speed;
     const double K_p;
     const double threshold;
-    const int32_t limMax, limMin;
 };
 
