@@ -21,25 +21,27 @@ public:
 
     int32_t update(int16_t ref, int16_t actual){
 
-        auto speed = static_cast<int32_t>(K_p*(ref-actual));
+        //calculate the output of the system using control law
+        auto output = static_cast<int32_t>(K_p * (ref - actual));
+
 #ifdef DEBUG
-        Serial.print("actual speed: ");
+        Serial.print("actual output: ");
         Serial.println(actual);
-        Serial.print("reference speed: ");
+        Serial.print("reference output: ");
         Serial.println(ref);
-        Serial.print("calculated speed: ");
-        Serial.println(speed);
+        Serial.print("calculated output: ");
+        Serial.println(output);
 #endif
-        //Calculate error
+        //Calculate error as an absolute term
         double error = fabs(static_cast<double>((ref-actual))/ref);
 #ifdef DEBUG
         Serial.print("Error: ");
         Serial.println(error);
 #endif
-        //Threshold to avoid unnecessary changes in speed
+        //Threshold to avoid unnecessary changes in output
         if (error > threshold) {
-            old_speed = speed;
-            return speed;
+            old_speed = output;
+            return output;
         } else {
             return old_speed;
         }

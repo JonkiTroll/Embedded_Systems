@@ -40,7 +40,7 @@ void encoder::init(int interrupt_number)
 }
 
 /*
- * Turn the DC motor on.
+ * Turns the DC motor on by setting the driver pin logic according to datasheet (DRV8833).
  */
 
 void encoder::turn_on()
@@ -56,7 +56,7 @@ void encoder::turn_on()
 }
 
 /*
- * Turn the DC motor off.
+ * Turn the DC motor off by clearing the output.
  */
 
 void encoder::turn_off()
@@ -91,6 +91,7 @@ void encoder::calc_speed_micros(uint32_t time_micros)
         measurement = true;
     }
 
+    //determine the direction of the motor.
     if (!(PIND & (1 << PIN3)))
     {
         current_PPS = -current_PPS;
@@ -109,6 +110,8 @@ void encoder::calc_speed_micros(uint32_t time_micros)
     }
 
     PPS[head] = current_PPS;
+
+    //Calculate the cumulative sum for the average output
     if (head == (N - 1))
     {
         cum_sum = cum_sum + current_PPS;
@@ -138,7 +141,7 @@ void encoder::update_speed(int32_t new_speed){
     }
     */
 
-
+    //keeps the output within set limits.
     if ( new_speed > 1200) {
         new_speed =  1200;
     } else if (new_speed < 100) {
@@ -151,7 +154,8 @@ void encoder::update_speed(int32_t new_speed){
     Serial.print("Dutycycle: ");
     Serial.println(dutyCycle);
 #endif
-    timer1.setDutyCycle(dutyCycle); //tekur gildi milli 7 og 95
+    //Update the duty cycle of the timer
+    timer1.setDutyCycle(dutyCycle);
 }
 
 /*
