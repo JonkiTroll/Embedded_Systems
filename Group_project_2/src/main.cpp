@@ -15,7 +15,7 @@
 
 
 encoder motor(10, 1);
-P_controller speed_controller(0.6, 0.05);
+P_controller speed_controller(0.4, 0.05);
 
 ISR(TIMER1_COMPA_vect){
     PORTB |= (1 << motor.getDRV_PIN2());

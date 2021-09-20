@@ -15,7 +15,7 @@ public:
 
     int16_t update(int16_t ref, int16_t actual){
 
-        auto speed = static_cast<int16_t>(K_p*(ref-actual));
+        auto speed = static_cast<int16_t>(K_p*(ref-actual)+actual);
 #ifdef DEBUG
         Serial.print("actual speed: ");
         Serial.println(actual);
