@@ -130,11 +130,11 @@ void encoder::update_speed(int32_t new_speed){
 
     /*
     if(new_speed < 0) {
-        isgoingForward = false;
+        isGoingForward = false;
         new_speed = -new_speed;
 
     }   else {
-        isgoingForward = true;
+        isGoingForward = true;
     }
     */
 
@@ -210,7 +210,9 @@ int16_t encoder::get_pulse_counter() const {
 void encoder::set_pulse_counter(int16_t new_value) {
     pulse_counter = new_value;
 }
-
+/*
+ * returns the direction in which the motor is going. CURRENTLY NOT IMPLEMENTED!
+ */
 bool encoder::is_going_forward() const {
-    return isgoingForward;
+    return isGoingForward;
 }

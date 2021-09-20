@@ -40,7 +40,7 @@ public:
 private:
 
     bool measurement = false;
-    bool isgoingForward = true;
+    bool isGoingForward = true;
     unsigned long curr_time = 0;
     uint32_t old_time_micros = 0;
     const uint8_t N = ARRAY_LENGTH;

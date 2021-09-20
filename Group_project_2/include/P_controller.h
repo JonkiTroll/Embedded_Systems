@@ -10,10 +10,14 @@
 
 class P_controller {
 public:
-    P_controller(double K, double T, int32_t max_limit, int32_t min_limit) :
+    P_controller(double K, double T) :
     K_p(K), threshold(T){
 
     }
+    /*
+     * Update function for the P controller. Takes in the feedback from the system as the actual term and reference
+     * and calculates
+     */
 
     int32_t update(int16_t ref, int16_t actual){
 
@@ -26,12 +30,13 @@ public:
         Serial.print("calculated speed: ");
         Serial.println(speed);
 #endif
+        //Calculate error
         double error = fabs(static_cast<double>((ref-actual))/ref);
 #ifdef DEBUG
         Serial.print("Error: ");
         Serial.println(error);
 #endif
-
+        //Threshold to avoid unnecessary changes in speed
         if (error > threshold) {
             old_speed = speed;
             return speed;
