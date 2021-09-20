@@ -11,30 +11,20 @@
 #include <avr/interrupt.h>
 #include "encoder.h"
 #include "P_controller.h"
-#include "timer_8bit.h"
-#define TIMER_INTERVAL_MS 30
 
 
 
-encoder motor(10, 20);
-P_controller speed_controller(0.5, 0.1);
-
-timer_8bit timer0(TIMER_INTERVAL_MS);
+encoder motor(10, 1);
+P_controller speed_controller(0.6, 0.05);
 
 ISR(TIMER1_COMPA_vect){
-
     PORTB |= (1 << motor.getDRV_PIN2());
 }
 
 ISR(TIMER1_COMPB_vect){
-
     PORTB &= ~(1 << motor.getDRV_PIN2());
 }
 
-ISR(TIMER0_COMPA_vect) {
-    double updated_speed = speed_controller.update(500, static_cast<double>(motor.get_average()));
-    motor.update_speed(updated_speed);
-}
 
 ISR(INT0_vect)
 {
@@ -47,9 +37,8 @@ void setup()
     //Serial.begin(115200);
     Serial.begin(9600); //Nano speed
     motor.init(PIN2, PIN3, 0);
-    timer0.init();
     motor.turn_on();
-    sei(); //Enable global interrupts
+   // sei(); //Enable global interrupts
 }
 
 void loop()
@@ -73,7 +62,10 @@ void loop()
     _delay_ms(1000);
 */
     _delay_ms(100);
-    Serial.println(motor.get_average());
+    int16_t updated_speed = speed_controller.update(1000, motor.get_average());
+    motor.update_speed(updated_speed);
+
+    Serial.println();
 
 
 }

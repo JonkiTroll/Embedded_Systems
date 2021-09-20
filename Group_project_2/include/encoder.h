@@ -26,8 +26,8 @@ public:
     void turn_off();
     void calc_speed_micros(uint32_t time_micros);
     uint16_t getPPS() const;
-    void update_speed(double new_speed);
-    uint16_t get_average() const;
+    void update_speed(int16_t new_speed);
+    int16_t get_average() const;
     uint8_t getDRV_PIN2() const;
 
     uint32_t getTau() const;

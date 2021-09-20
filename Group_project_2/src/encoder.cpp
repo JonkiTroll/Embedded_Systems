@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <Arduino.h>
 
-//#define DEBUG
+#define DEBUG
 
 /*
  * Initialize both the interrupts and GPIO pins used to control the motor. The GPIO pins are on PORTB.
@@ -37,6 +37,8 @@ void encoder::init(int pin1, int pin2, int interrupt_number)
     DDRB |= ((1 << pin1) | (1 << pin2));  // Set pins
     DRV_PIN1 = pin1;
     DRV_PIN2 = pin2;
+
+    timer1.init();
 }
 
 /*
@@ -119,19 +121,34 @@ void encoder::calc_speed_micros(uint32_t time_micros)
 }
 
 /*
- * Returns the most recently calculated Pulses per second.
+ * Updates the duty cycle of the PWM signal. The PWM output is linear in that top speed equals 100% duty cycle,
+ * and minimum speed equals 0% duty cycle.
  */
 
-void encoder::update_speed(double new_speed){
+void encoder::update_speed(int16_t new_speed){
+    //calculate duty cycle as a percentage.
+    auto dutyCycle = static_cast<uint16_t>(100*new_speed/top_speed);
 
-    auto dutyCycle = static_cast<uint16_t>((new_speed/top_speed)*100);
-
+#ifdef DEBUG
+    Serial.print("Dutycycle: ");
+    Serial.println(dutyCycle);
+#endif
     timer1.setDutyCycle(dutyCycle); //tekur gildi milli 7 og 95
 }
 
-uint16_t encoder::get_average() const{
-    return cum_sum/(N-1);
+/*
+ * Calculates the average value of the speed. cum_sum is the cumulative sum which is calculated in the
+ * calc_speed_micros() function.
+ */
+
+int16_t encoder::get_average() const{
+    int16_t result = cum_sum/(N-1);
+    return result;
 }
+
+/*
+ * Returns the most recently calculated Pulses per second.
+ */
 
 uint16_t encoder::getPPS() const
 {
@@ -150,7 +167,9 @@ uint16_t encoder::getPPS() const
 uint32_t encoder::getTau() const {
     return tau;
 }
-
+/*
+ * getter for the driver pin.
+ */
 uint8_t encoder::getDRV_PIN2() const{
     return DRV_PIN2;
 }

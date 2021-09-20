@@ -9,6 +9,8 @@ public:
 
     void setDutyCycle(uint16_t duty);
 
+    void init();
+
     void start();
 
     void stop();

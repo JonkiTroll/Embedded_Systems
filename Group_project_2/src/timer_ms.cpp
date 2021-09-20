@@ -26,7 +26,14 @@ timer_ms::timer_ms(uint16_t intervalMs) : mTimerInterval(intervalMs), mDutyCycle
 
 timer_ms::timer_ms(uint16_t intervalMs, uint16_t dutyCycle) : mTimerInterval(intervalMs), mDutyCycle(dutyCycle) {
 
-    if(intervalMs != 0) {
+};
+
+/*
+ * Enables interrupts globally. Should preferrably only start the timer, but for this application it works
+ */
+
+void timer_ms::init(){
+    if(mTimerInterval != 0) {
         TCCR1A = 0; //Clear Timer register A
         TCCR1B = 0; //Clear Timer register B
         TCNT1 = 0;  //Clear counter
@@ -38,11 +45,7 @@ timer_ms::timer_ms(uint16_t intervalMs, uint16_t dutyCycle) : mTimerInterval(int
         TIMSK1 |= (1 << OCIE1A) | (1 << OCIE1B);                  //Enable interrupts
         TCCR1B |= (1 << CS12) | (1 << CS10);                    //Configure prescaler (prescaler = 1024)
     }
-};
-
-/*
- * Enables interrupts globally. Should preferrably only start the timer, but for this application it works
- */
+}
 
 void timer_ms::start() {
     sei();
