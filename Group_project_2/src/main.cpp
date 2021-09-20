@@ -11,11 +11,16 @@
 #include <avr/interrupt.h>
 #include "encoder.h"
 #include "P_controller.h"
+#include <stdint.h>
 
+double error_threshold = 0.05;
+int period_ms = 10;
+uint8_t interrupt_pin = 1;
+uint32_t duty = 60;
+double Kp = 0.3;
 
-
-encoder motor(10, 1);
-P_controller speed_controller(0.4, 0.05);
+encoder motor(period_ms, interrupt_pin);
+P_controller speed_controller(Kp, error_threshold);
 
 ISR(TIMER1_COMPA_vect){
     PORTB |= (1 << motor.getDRV_PIN2());
@@ -62,7 +67,7 @@ void loop()
     _delay_ms(1000);
 */
     _delay_ms(100);
-    int16_t updated_speed = speed_controller.update(1000, motor.get_average());
+    int16_t updated_speed = speed_controller.update((duty*1266)/100, motor.get_average());
     motor.update_speed(updated_speed);
 
     Serial.println();
