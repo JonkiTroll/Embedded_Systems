@@ -7,20 +7,24 @@
 
 #include "Arduino.h"
 #include <util/delay.h>
+#include "digital_out.h"
 
 #include <avr/interrupt.h>
 #include "encoder.h"
 #include "P_controller.h"
 #include <stdint.h>
 
-double error_threshold = 0.05;
+double error_threshold = 0.1;
 int period_ms = 10;
 uint8_t interrupt_pin = 1;
 uint32_t duty = 60;
-double Kp = 0.3;
+double Kp = 1.0; //If K_p is = 2.0 and reference speed to 1000, the output oscillates
+
+uint16_t counter = 0;
 
 encoder motor(period_ms, interrupt_pin);
-P_controller speed_controller(Kp, error_threshold);
+P_controller speed_controller(Kp, error_threshold, 1200, 100);
+Digital_out led(5);
 
 ISR(TIMER1_COMPA_vect){
     PORTB |= (1 << motor.getDRV_PIN2());
@@ -34,12 +38,17 @@ ISR(TIMER1_COMPB_vect){
 ISR(INT0_vect)
 {
     motor.calc_speed_micros(micros());
+    if(motor.getPulseCounter() > 700 || motor.getPulseCounter() < -700) {
+        motor.setPulseCounter(0);
+        led.toggle(); //should blink at roughly 1 second interval
+    }
 }
 
 void setup()
 {
 
     //Serial.begin(115200);
+    led.init();
     Serial.begin(9600); //Nano speed
     motor.init(PIN2, PIN3, 0);
     motor.turn_on();
@@ -67,9 +76,12 @@ void loop()
     _delay_ms(1000);
 */
     _delay_ms(100);
-    int16_t updated_speed = speed_controller.update((duty*1266)/100, motor.get_average());
+    int16_t reference_speed = 1000;//(duty*1266)/100;
+    int32_t updated_speed = speed_controller.update(reference_speed, motor.get_average());
     motor.update_speed(updated_speed);
 
+    Serial.print("Updated_speed: ");
+    Serial.println(updated_speed);
     Serial.println();
 
 

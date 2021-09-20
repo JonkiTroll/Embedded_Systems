@@ -96,6 +96,9 @@ void encoder::calc_speed_micros(uint32_t time_micros)
     if (!(PIND & (1 << PIN3)))
     {
         current_PPS = -current_PPS;
+        pulse_counter--;
+    } else {
+        pulse_counter++;
     }
 
     if (head >= (N - 1))
@@ -125,7 +128,8 @@ void encoder::calc_speed_micros(uint32_t time_micros)
  * and minimum speed equals 0% duty cycle.
  */
 
-void encoder::update_speed(int16_t new_speed){
+void encoder::update_speed(int32_t new_speed){
+
     //calculate duty cycle as a percentage.
     auto dutyCycle = static_cast<uint16_t>(100*new_speed/top_speed);
 
@@ -173,4 +177,14 @@ uint32_t encoder::getTau() const {
 uint8_t encoder::getDRV_PIN2() const{
     return DRV_PIN2;
 }
+/*
+ * returns pulse counter
+ */
 
+int16_t encoder::getPulseCounter() const {
+    return pulse_counter;
+}
+
+void encoder::setPulseCounter(int16_t new_value) {
+    pulse_counter = new_value;
+}

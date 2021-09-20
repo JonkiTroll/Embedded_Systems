@@ -26,24 +26,28 @@ public:
     void turn_off();
     void calc_speed_micros(uint32_t time_micros);
     uint16_t getPPS() const;
-    void update_speed(int16_t new_speed);
+    void update_speed(int32_t new_speed);
     int16_t get_average() const;
+    int16_t getPulseCounter() const;
+    void setPulseCounter(int16_t new_value);
     uint8_t getDRV_PIN2() const;
 
     uint32_t getTau() const;
 
 private:
+
     bool measurement = false;
     unsigned long curr_time = 0;
     uint32_t old_time_micros = 0;
     const uint8_t N = ARRAY_LENGTH;
-    const uint16_t top_speed = 1266;
+    const uint32_t top_speed = 1266;
     int16_t PPS[ARRAY_LENGTH] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     uint8_t head = 0;
     int32_t cum_sum = 0;
     uint32_t tau = 0;
     uint8_t DRV_PIN1;
     uint8_t DRV_PIN2;
+    int16_t pulse_counter;
     timer_ms timer1;
 };
 
