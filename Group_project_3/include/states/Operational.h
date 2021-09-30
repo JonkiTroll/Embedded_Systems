@@ -17,9 +17,12 @@ public:
 
     void on_exit() override;
 
+    void on_loop() override;
+
     void blinkLed() override;
     void reset() override;
     void fault() override;
+
 };
 
 #endif //GROUP_PROJECT_3_OPERATIONAL_H

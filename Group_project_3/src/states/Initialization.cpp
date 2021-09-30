@@ -18,7 +18,6 @@ void Initialization::on_entry()  {
     led.set_lo();
     delay(100);
     motor.init(interrupt_pin);
-    motor.turn_on();
 
     sei();
 

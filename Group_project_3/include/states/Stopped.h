@@ -9,12 +9,13 @@
 
 class Stopped : public State {
 public:
-    Stopped() {};
+    Stopped() {}
     void on_entry() override;
     void on_exit() override;
     void blinkLed() override;
     void reset() override {}
     void fault() override;
+    void clearFault() override;
 
 };
 

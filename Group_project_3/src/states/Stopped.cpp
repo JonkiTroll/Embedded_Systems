@@ -15,7 +15,6 @@ void Stopped::on_entry() {
 void Stopped::on_exit() {
 
     timer0.disable();
-    motor.turn_on();
     Serial.println("Exiting Stopped");
 }
 
@@ -24,7 +23,11 @@ void Stopped::blinkLed() {
     timer0.enable();
 }
 
-void Stopped::fault() {
+void Stopped::clearFault() {
     Serial.println("Clearing fault");
     this->context_->TransitionTo(new Operational);
+}
+
+void Stopped::fault() {
+
 }

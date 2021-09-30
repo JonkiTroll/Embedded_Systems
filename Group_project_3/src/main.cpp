@@ -31,7 +31,7 @@ uint16_t counter = 0;
 
 ISR(TIMER0_COMPA_vect) {
     counter++;
-    if(counter>=1000){
+    if(counter>=500){
             led.toggle();
             counter = 0;
         }
@@ -41,7 +41,6 @@ ISR(INT0_vect) {
     motor.calc_speed_micros(micros());
     if (motor.get_pulse_counter() > 700 || motor.get_pulse_counter() < -700) {
         motor.set_pulse_counter(0);
-        led.toggle(); //should blink at roughly 1 second interval
     }
 }
 void setup(){
@@ -64,7 +63,7 @@ void loop(){
 
          }
 
-
+        context->Request1('l');
 
     }
     if (command != '0') {
@@ -73,7 +72,8 @@ void loop(){
     }
 
     while(motorFault.is_hi()) {
-        //delay(10);
+        Serial.read(); //Keep serial from placing in buffer. Any commands entered here should be discarded.
     }
+    delay(500);
 
 }

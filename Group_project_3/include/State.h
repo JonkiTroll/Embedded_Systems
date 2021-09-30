@@ -25,9 +25,11 @@ public:
     }
     virtual void on_entry() = 0;
     virtual void on_exit() = 0;
+    virtual void on_loop() { }
     virtual void blinkLed() = 0;
     virtual void reset() = 0;
     virtual void fault() = 0;
+    virtual void clearFault() { };
 };
 
 /**
@@ -73,7 +75,11 @@ public:
             this->state_->reset();
         }  else if(command == 's') {
             this->state_->fault();
-        } else {
+        } else if (command == 'c') {
+            this->state_->clearFault();
+        } else if (command == 'l'){
+            this->state_->on_loop();
+        } else{
             Serial.print("Invalid command\n\r");
         }
     }

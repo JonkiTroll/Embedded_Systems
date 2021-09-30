@@ -46,6 +46,7 @@ void encoder::init(int interrupt_number)
 
 void encoder::turn_on()
 {
+
     PORTB &= ~(1 << DRV_PIN1);
 
     PORTB |= (1 << DRV_PIN2);

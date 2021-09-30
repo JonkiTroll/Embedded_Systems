@@ -36,7 +36,7 @@ void timer_ms::init(){
 }
 
 void timer_ms::enable() {
-    TIMSK1 |= (1 << OCIE1A); // | (1 << OCIE1B)
+    TIMSK1 |= (1 << OCIE1A) | (1 << OCIE1B); // | (1 << OCIE1B)
 }
 
 /*
