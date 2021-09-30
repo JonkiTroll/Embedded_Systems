@@ -3,8 +3,8 @@
 
 scale 350 width
 
-stateInitialization:       Entry: Set variables\n Exit: Send boot message
-stateOperational:    Entry: Turn led on
+stateInitialization:        Entry: Set variables and initialize pins\n Exit: Send boot message
+stateOperational:           Entry: Turn led on
 
 [*]-down->stateInitialization: Initial state
 stateInitialization -down-> stateOperational: autonomous
