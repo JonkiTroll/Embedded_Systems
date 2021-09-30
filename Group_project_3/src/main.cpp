@@ -55,6 +55,9 @@ char command;
 void loop(){
 
     while (command == '0') {
+
+        context->Request1('l');
+
         if (Serial.available())
             command = Serial.read();
 
@@ -63,7 +66,6 @@ void loop(){
 
          }
 
-        context->Request1('l');
 
     }
     if (command != '0') {
