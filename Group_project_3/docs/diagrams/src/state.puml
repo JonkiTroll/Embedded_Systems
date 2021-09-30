@@ -3,7 +3,7 @@
 
 scale 350 width
 
-stateInitialization:        Entry: Set variables\n Exit: Send boot message
+stateInitialization:        Entry: Set variables and initialize systems\n Exit: Send boot message
 stateOperational:           Entry: Turn led and motor on\n Do: update speed using P_controller
 stateStopped:               Entry: Enable timer0 for blinking led.\n Turn motor off\n Exit: disable timer0
 
@@ -11,6 +11,6 @@ stateStopped:               Entry: Enable timer0 for blinking led.\n Turn motor 
 stateInitialization -down-> stateOperational: autonomous
 stateOperational -up-> stateInitialization: command: reset
 stateOperational -right-> stateStopped: command: fault
-stateStopped -right-> stateOperational: command: fault
+stateStopped -right-> stateOperational: command: clear fault
 
 @enduml
