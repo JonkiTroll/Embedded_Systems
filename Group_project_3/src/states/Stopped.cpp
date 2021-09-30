@@ -8,19 +8,20 @@
 
 void Stopped::on_entry() {
     Serial.println("Entering Stopped");
-
+    motor.turn_off();
     this->blinkLed();
 }
 
 void Stopped::on_exit() {
 
-    timer1.disable();
+    timer0.disable();
+    motor.turn_on();
     Serial.println("Exiting Stopped");
 }
 
 void Stopped::blinkLed() {
-    timer1.setInterval(500);
-    timer1.enable();
+
+    timer0.enable();
 }
 
 void Stopped::fault() {

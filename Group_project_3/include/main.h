@@ -8,10 +8,15 @@
 #include "digital_out.h"
 #include "digital_in.h"
 #include "timer_8bit.h"
-#include "timer_ms.h"
 #include "Arduino.h"
+#include "encoder.h"
+#include "P_controller.h"
 
-extern timer_ms timer1;
+
+extern timer_8bit timer0;
+extern encoder motor;
+extern P_controller speed_controller;
+
 extern Digital_out led;
 
 #endif //GROUP_PROJECT_3_MAIN_H
