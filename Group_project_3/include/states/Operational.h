@@ -19,6 +19,7 @@ public:
 
     void blinkLed() override;
     void reset() override;
+    void fault() override;
 };
 
 #endif //GROUP_PROJECT_3_OPERATIONAL_H

@@ -13,7 +13,8 @@ public:
     void on_entry() override;
     void on_exit() override;
     void blinkLed() override;
-    void reset() override;
+    void reset() override {}
+    void fault() override;
 
 };
 

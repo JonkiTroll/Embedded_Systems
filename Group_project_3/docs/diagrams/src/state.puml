@@ -1,0 +1,16 @@
+@startuml
+'https://plantuml.com/state-diagram
+
+scale 350 width
+
+stateInitialization:        Entry: Set variables\n Exit: Send boot message
+stateOperational:           Entry: Turn led on
+stateStopped:               Entry: Enable timer0\n Exit: disable timer0
+
+[*]-down->stateInitialization: Initial state
+stateInitialization -down-> stateOperational: autonomous
+stateOperational -up-> stateInitialization: command: reset
+stateOperational -right-> stateStopped: command: fault
+stateStopped -right-> stateOperational: command: fault
+
+@enduml

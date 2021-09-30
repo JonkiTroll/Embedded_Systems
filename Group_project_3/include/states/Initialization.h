@@ -12,8 +12,9 @@ public:
     Initialization() {};
     void on_entry() override;
     void on_exit() override;
-    void blinkLed() override {};
-    void reset() override {};
+    void blinkLed() override {}
+    void reset() override {}
+    void fault() override {}
 
 };
 #endif //GROUP_PROJECT_3_INITIALIZATION_H

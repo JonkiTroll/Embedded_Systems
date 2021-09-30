@@ -27,6 +27,7 @@ public:
     virtual void on_exit() = 0;
     virtual void blinkLed() = 0;
     virtual void reset() = 0;
+    virtual void fault() = 0;
 };
 
 /**
@@ -70,7 +71,9 @@ public:
     void Request1(char command) {
         if(command == 'r'){
             this->state_->reset();
-        }  else {
+        }  else if(command == 's') {
+            this->state_->fault();
+        } else {
             Serial.print("Invalid command\n\r");
         }
     }

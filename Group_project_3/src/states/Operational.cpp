@@ -1,13 +1,13 @@
 //
 // Created by jon on 9/30/21.
 //
-#include "Operational.h"
-#include "Initialization.h"
+#include "states/Operational.h"
+#include "states/Initialization.h"
+#include "states/Stopped.h"
 #include "main.h"
 
 void Operational::on_entry(){
     Serial.println("Entering Operational");
-
     this->blinkLed();
 }
 
@@ -22,4 +22,8 @@ void Operational::blinkLed() {
 void Operational::reset()  {
     Serial.println("Resetting");
     this->context_->TransitionTo(new Initialization);
+}
+
+void Operational::fault() {
+    this->context_->TransitionTo(new Stopped);
 }
