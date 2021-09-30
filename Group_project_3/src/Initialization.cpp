@@ -7,6 +7,7 @@
 
 void Initialization::on_entry()  {
     Serial.println("Entering Initialization");
+    // Maybe set here the useage of initalization 
     delay(100);
     led.set_lo();
     delay(100);
