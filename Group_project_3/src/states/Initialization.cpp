@@ -7,7 +7,8 @@
 
 void Initialization::on_entry()  {
     Serial.println("Entering Initialization");
-
+    // Maybe set here the useage of initalization so that when this restarts, everything is reset.
+    // Torfi says no, but not sure.
     cli();
     led.init();
     timer1.init();
