@@ -19,5 +19,4 @@ stateOperational -right-> stateStopped: command: fault
 stateStopped -right-> stateOperational: command: clear fault
 stateStopped -> stateInitialization: command: reset
 
-
 @enduml
