@@ -4,7 +4,7 @@
 scale 350 width
 
 stateInitialization:        Entry: Set variables and initialize systems\n Exit: Send boot message
-stateOperational:           Entry: Turn led and motor on\n Do: update speed using P_controller
+stateOperational:           Entry: Turn led and motor on\n Do: update speed using P_controller on loop
 stateStopped:               Entry: Enable timer0 for blinking led.\n Turn motor off\n Exit: disable timer0
 
 [*]-down->stateInitialization: Initial state
