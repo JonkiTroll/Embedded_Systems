@@ -10,14 +10,21 @@
 
 constexpr double error_threshold = 0.05;
 int period_ms = 10;
-double Kp = 1.0; //If K_p is = 2.0 and reference speed to 1000, the output oscillates
+const double Kp = 1.0, Ki = 0.01; //If K_p is = 2.0 and reference speed to 1000, the output oscillates
 
 
 timer_8bit timer0(10);
 Digital_in motorFault(1);
 Context *context;
 encoder motor(PIN2, PIN3, period_ms, 0);
-P_controller speed_controller(Kp, error_threshold);
+//P_controller speed_controller(Kp, error_threshold);
+
+#ifdef USE_P_CONTROLLER
+p_controller speed_controller(Kp, -1200, 1200);
+#else
+pi_controller speed_controller(Kp, Ki, -1200, 1200, 100);
+#endif
+
 Digital_out led(5), driver_pin2(motor.getDRV_PIN2());
 
 ISR(TIMER1_COMPA_vect) {
