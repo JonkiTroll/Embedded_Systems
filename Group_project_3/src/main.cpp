@@ -31,11 +31,12 @@ pi_controller speed_controller(Kp, Ki, -1200, 1200, static_cast<double>(period_m
 Digital_out led(5), driver_pin2(motor.getDRV_PIN2());
 
 ISR(TIMER1_COMPA_vect) {
-    driver_pin2.set_hi();
+    //driver_pin2.set_hi();
+    PORTB |= (1<<motor.getDRV_PIN2());
 }
 
 ISR(TIMER1_COMPB_vect) {
-    driver_pin2.set_lo();
+    PORTB &= ~(1<<motor.getDRV_PIN2());
 }
 uint16_t counter = 0;
 

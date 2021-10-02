@@ -40,6 +40,8 @@ public:
 
 private:
 
+    void changeDir();
+
     bool measurement = false;
     bool isGoingForward = true;
     unsigned long curr_time = 0;

@@ -132,28 +132,32 @@ void encoder::calc_speed_micros(uint32_t time_micros)
  * and minimum speed equals 0% duty cycle.
  */
 
+void encoder::changeDir() {
+    uint8_t oldPin = DRV_PIN1;
+    DRV_PIN1 = DRV_PIN2;
+    DRV_PIN2 = oldPin;
+
+    PORTB &= ~(1<<DRV_PIN1);
+}
+
 void encoder::update_speed(int32_t new_speed){
 
-    /*
-    if(new_speed < 0) {
-        isGoingForward = false;
-        new_speed = -new_speed;
 
-    }   else {
-        isGoingForward = true;
-    }
-    */
 
-    //keeps the output within set limits.
 
     if (new_speed < 0) {
         new_speed = -new_speed;
-        PORTB |= (1 << DRV_PIN1);
-
+        if(isGoingForward){
+            changeDir();
+        }
+        isGoingForward = false;
     } else {
-        PORTB &= ~(1 << DRV_PIN1);
+        if(!isGoingForward){
+            changeDir();
+        }
+        isGoingForward = true;
     }
-
+    //keeps the output within set limits.
     if ( new_speed > 1200) {
         new_speed =  1200;
     }

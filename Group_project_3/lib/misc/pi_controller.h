@@ -6,6 +6,7 @@
 #define ARDUINO_PID_PI_CONTROLLER_H
 
 #include "controller.h"
+#include "math.h"
 
 class pi_controller : public controller{
 public:
@@ -19,8 +20,17 @@ public:
 
     double update(double setPoint, double measurement) override
     {
+        bool Forward = true;
+        if (setPoint < 0) {
+            setPoint = -setPoint;
+            Forward = false;
+        }
+
+        if (measurement < 0) {
+            measurement = -measurement;
+        }
         /* Error signal */
-        double error = setPoint-measurement;
+        double error = setPoint-(measurement);
         /* Proportional */
         double proportional = K_p * error;
 
@@ -59,7 +69,12 @@ public:
             result = limMin;
         }
 
-        return result;
+        if(Forward){
+            return result;
+        } else {
+            return -result;
+        }
+
     }
 
     void reset() override {
