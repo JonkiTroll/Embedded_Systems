@@ -16,16 +16,30 @@ public:
 
     double update(double setPoint, double measurement) override
     {
+        bool Forward = true;
+        if (setPoint < 0) {
+            setPoint = -setPoint;
+            Forward = false;
+        }
+
+        if (measurement < 0) {
+            measurement = -measurement;
+        }
+
         double error = setPoint-measurement;
         double proportional = K_p * error;
 
         if (proportional > limMax) {
-            return limMax;
+            proportional = limMax;
         } else if (proportional < limMin) {
-            return limMin;
+            proportional = limMin;
         }
 
-        return proportional;
+        if(Forward){
+            return proportional;
+        } else {
+            return -proportional;
+        }
     }
 
     void reset() override {

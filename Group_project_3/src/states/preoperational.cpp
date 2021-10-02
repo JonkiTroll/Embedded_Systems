@@ -69,8 +69,10 @@ void preOperational::enterShell() {
         Serial.println("Select which parameter you wish to edit");
         Serial.print("proportional gain: p<new value> \t current value: ");
         Serial.println(speed_controller.getProportionalGain());
+#ifndef USE_P_CONTROLLER
         Serial.print("integral gain: i<new value> \t\t current value: ");
         Serial.println(speed_controller.getIntegralGain());
+#endif
         Serial.print("reference speed: r<new value> \t\t current value: ");
         Serial.println(reference);
         Serial.println("q: quit");
@@ -85,11 +87,13 @@ void preOperational::enterShell() {
                 newVal = command.toDouble();
                 speed_controller.setProportionalGain(newVal);
                 break;
+#ifndef USE_P_CONTROLLER
             case 'i':
                 command.remove(0, 1);
                 newVal = command.toDouble();
                 speed_controller.setIntegralGain(newVal);
                 break;
+#endif
             case 'r':
                 command.remove(0, 1);
                 newVal = command.toDouble();
