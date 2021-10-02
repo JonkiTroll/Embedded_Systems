@@ -12,6 +12,7 @@ constexpr double error_threshold = 0.05;
 int period_ms = 10;
 const double Kp = 1.0, Ki = 0.01; //If K_p is = 2.0 and reference speed to 1000, the output oscillates
 
+//Ki = Kp/Ti
 
 timer_8bit timer0(10);
 Digital_in motorFault(1);

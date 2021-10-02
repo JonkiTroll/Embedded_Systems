@@ -13,7 +13,6 @@ public:
             controller(0, limit_min, limit_max, sampleT), K_p(p), K_i(i) {
         integrator = 0.0;
 
-        prevError = 0.0;
     }
 
     double update(double setPoint, double measurement) override
@@ -24,7 +23,7 @@ public:
         double proportional = K_p * error;
 
         /* Integral */
-        integrator = integrator + 0.5*K_i*T*(error+prevError);
+        integrator = integrator + K_i*T*(error);
 
         double limMinInt, limMaxInt;
 
@@ -58,15 +57,12 @@ public:
             result = limMin;
         }
 
-        prevError = error;
-
         return result;
     }
 
 private:
     const double K_p, K_i;
     double integrator;
-    double prevError;
 };
 
 

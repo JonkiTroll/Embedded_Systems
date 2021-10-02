@@ -11,6 +11,9 @@
 #include "Arduino.h"
 #include "encoder.h"
 
+/*
+ * Uncomment this to use P controller instead of PI controller
+ */
 //#define USE_P_CONTROLLER
 
 #ifdef USE_P_CONTROLLER
