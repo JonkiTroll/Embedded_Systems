@@ -20,7 +20,7 @@ void Stopped::on_exit() {
 }
 
 void Stopped::blinkLed() {
-
+    timer0.setCounter(500);
     timer0.enable();
 }
 

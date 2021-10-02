@@ -37,7 +37,6 @@ void encoder::init(int interrupt_number)
     DDRB |= ((1 << DRV_PIN1) | (1 << DRV_PIN2));  // Set pins
 
     timer1.init();
-    timer1.enable();
 }
 
 /*

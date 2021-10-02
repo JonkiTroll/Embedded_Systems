@@ -11,6 +11,7 @@ public:
     timer_8bit(uint16_t timer_interval)
     {
         interval = timer_interval;
+        counter = 0;
     }
     void init()
     {
@@ -41,8 +42,18 @@ public:
         i = interval;
         OCR0A |= ((16000) / 1024) * interval - 1;
     }
+
+    void setCounter(uint16_t value) {
+        counter = value;
+    }
+
+    uint16_t getCounter() const {
+        return counter;
+    }
+
 private:
     uint16_t interval;
+    uint16_t counter;
 
 };
 

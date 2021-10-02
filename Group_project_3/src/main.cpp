@@ -40,7 +40,7 @@ uint16_t counter = 0;
 
 ISR(TIMER0_COMPA_vect) {
     counter++;
-    if(counter>=500){
+    if(counter>=timer0.getCounter()){
             led.toggle();
             counter = 0;
         }

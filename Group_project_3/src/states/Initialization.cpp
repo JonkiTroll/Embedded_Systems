@@ -2,7 +2,7 @@
 // Created by jon on 9/30/21.
 //
 #include "states/Initialization.h"
-#include "states/Operational.h"
+#include "states/preOperational.h"
 #include "main.h"
 
 
@@ -21,7 +21,7 @@ void Initialization::on_entry()  {
 
     sei();
 
-    this->context_->TransitionTo(new Operational);
+    this->context_->TransitionTo(new preOperational);
 }
 
 void Initialization::on_exit() {
