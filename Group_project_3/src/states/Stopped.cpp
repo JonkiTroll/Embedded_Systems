@@ -4,6 +4,7 @@
 
 #include "states/Stopped.h"
 #include "states/Operational.h"
+#include "states/Initialization.h"
 #include "main.h"
 
 void Stopped::on_entry() {
@@ -30,4 +31,8 @@ void Stopped::clearFault() {
 
 void Stopped::fault() {
 
+}
+
+void Stopped::reset() {
+    this->context_->TransitionTo(new Initialization);
 }

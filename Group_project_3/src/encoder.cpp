@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <Arduino.h>
 
-#define DEBUG
+//#define DEBUG
 
 /*
  * Initialize both the interrupts and GPIO pins used to control the motor. The GPIO pins are on PORTB.

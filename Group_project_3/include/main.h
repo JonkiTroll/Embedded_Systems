@@ -10,12 +10,26 @@
 #include "timer_8bit.h"
 #include "Arduino.h"
 #include "encoder.h"
-#include "P_controller.h"
 
+/*
+ * Uncomment this to use P controller instead of PI controller
+ */
+#define USE_P_CONTROLLER
+
+#ifdef USE_P_CONTROLLER
+#include "p_controller.h"
+#else
+#include "pi_controller.h"
+#endif
 
 extern timer_8bit timer0;
 extern encoder motor;
-extern P_controller speed_controller;
+
+#ifdef USE_P_CONTROLLER
+extern p_controller speed_controller;
+#else
+extern pi_controller speed_controller;
+#endif
 
 extern Digital_out led;
 

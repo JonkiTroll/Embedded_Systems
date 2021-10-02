@@ -6,6 +6,8 @@
 #include "states/Stopped.h"
 #include "main.h"
 
+#define DEBUG
+
 void Operational::on_entry(){
     Serial.println("Entering Operational");
     motor.turn_on();
@@ -19,13 +21,19 @@ void Operational::on_exit()  {
 void Operational::on_loop() {
 
     _delay_ms(100);
-    int16_t reference_speed = 1000;//(duty*1266)/100;
-    int32_t updated_speed = speed_controller.update(reference_speed, motor.get_average());
-    motor.update_speed(updated_speed);
+    double reference_speed = 1000.0;//(duty*1266)/100;
+    auto measured_speed = static_cast<double>(motor.get_average());
 
+    auto updated_speed = static_cast<int32_t>(speed_controller.update(reference_speed,
+                                                   measured_speed));
+    motor.update_speed(updated_speed);
+#ifdef DEBUG
+    Serial.print("Actual speed: ");
+    Serial.println(measured_speed);
     Serial.print("Updated_speed: ");
     Serial.println(updated_speed);
     Serial.println();
+#endif
 
 }
 
