@@ -37,6 +37,7 @@ public:
     uint32_t get_tau() const;
     bool is_going_forward() const;
 
+
 private:
 
     bool measurement = false;

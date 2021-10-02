@@ -2,6 +2,7 @@
 // Created by jon on 9/30/21.
 //
 #include "states/Operational.h"
+#include "states/preOperational.h"
 #include "states/Initialization.h"
 #include "states/Stopped.h"
 #include "main.h"
@@ -15,16 +16,16 @@ void Operational::on_entry(){
 }
 
 void Operational::on_exit()  {
+    motor.turn_off();
     Serial.println("Leaving Operational");
 }
 
 void Operational::on_loop() {
 
-    _delay_ms(100);
-    double reference_speed = 1000.0;//(duty*1266)/100;
+    _delay_ms(period_ms);
     auto measured_speed = static_cast<double>(motor.get_average());
 
-    auto updated_speed = static_cast<int32_t>(speed_controller.update(reference_speed,
+    auto updated_speed = static_cast<int32_t>(speed_controller.update(reference,
                                                    measured_speed));
     motor.update_speed(updated_speed);
 #ifdef DEBUG
@@ -47,5 +48,9 @@ void Operational::reset()  {
 }
 
 void Operational::fault() {
-    this->context_->TransitionTo(new Stopped);
+    this->context_->TransitionTo(new Stopped('o'));
+}
+
+void Operational::preOp() {
+    this->context_->TransitionTo(new preOperational);
 }

@@ -4,15 +4,16 @@
 scale 350 width
 
 stateInitialization:        Entry: Set variables and initialize systems\n Exit: Send boot message
-statePreOperational:        Entry: Blink led at 1Hz  \n Do: accept parameter changes
-stateOperational:           Entry: Turn led and motor on\n Do: update speed using P_controller
-stateStopped:               Entry: Enable timer0 for blinking led.\n Turn motor off\n Exit: disable timer0
+statePreOperational:        Entry: Blink led at 1Hz  \n Do: accept parameter changes \n Exit: Disable timer0
+stateOperational:           Entry: Turn led and motor on\n Do: update speed using P_controller\n Exit: Turn motor off
+stateStopped:               Entry: Enable timer0 for blinking led.\n  Exit: disable timer0
 
 [*]-down->stateInitialization: Initial state
 stateInitialization -down-> statePreOperational: autonomous\n msg: Boot-up
 statePreOperational -up-> stateInitialization: command: reset
 statePreOperational -down-> stateOperational: command: set
 statePreOperational -down-> stateStopped: command: fault
+stateStopped -up-> statePreOperational: command: clear fault
 stateOperational -up-> statePreOperational: command: pre-op
 stateOperational -up-> stateInitialization: command: reset
 stateOperational -right-> stateStopped: command: fault

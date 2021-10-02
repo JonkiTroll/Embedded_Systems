@@ -9,7 +9,7 @@
 
 class pid_controller : controller{
 public:
-    pi_controller(double p, double i, double d, double t, double limit_min, double limit_max, double sampleT) :
+    pid_controller(double p, double i, double d, double t, double limit_min, double limit_max, double sampleT) :
             controller(t, limit_min, limit_max, sampleT), K_p(p), K_i(i), K_d(d) {
         integrator = 0.0;
         differentiator = 0.0;
@@ -68,6 +68,13 @@ public:
         prevMeasurement = measurement;
 
         return result;
+    }
+
+    void reset() override {
+        integrator = 0.0;
+        prevError = 0.0;
+        differentiator = 0.0;
+        prevMeasurement = 0.0;
     }
 
 private:

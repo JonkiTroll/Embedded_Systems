@@ -4,12 +4,12 @@
 
 #include "states/Stopped.h"
 #include "states/Operational.h"
+#include "states/preOperational.h"
 #include "states/Initialization.h"
 #include "main.h"
 
 void Stopped::on_entry() {
     Serial.println("Entering Stopped");
-    motor.turn_off();
     this->blinkLed();
 }
 
@@ -26,11 +26,11 @@ void Stopped::blinkLed() {
 
 void Stopped::clearFault() {
     Serial.println("Clearing fault");
-    this->context_->TransitionTo(new Operational);
-}
-
-void Stopped::fault() {
-
+    if (old_context_ == 'o') {
+        this->context_->TransitionTo(new Operational);
+    } else if (old_context_ == 'p') {
+        this->context_->TransitionTo(new preOperational);
+    }
 }
 
 void Stopped::reset() {

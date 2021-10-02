@@ -23,13 +23,15 @@ public:
     void set_context(Context *context) {
         this->context_ = context;
     }
-    virtual void on_entry() = 0;
-    virtual void on_exit() = 0;
-    virtual void on_loop() { }
-    virtual void blinkLed() = 0;
-    virtual void reset() = 0;
-    virtual void fault() = 0;
-    virtual void clearFault() { };
+    virtual void on_entry() { }
+    virtual void on_exit() { }
+    virtual void on_loop() {  }
+    virtual void blinkLed() {  }
+    virtual void reset() {  }
+    virtual void fault() { }
+    virtual void set() {  }
+    virtual void preOp() {  }
+    virtual void clearFault() { }
 };
 
 /**
@@ -71,16 +73,27 @@ public:
      * The Context delegates part of its behavior to the current State object.
      */
     void Request1(char command) {
-        if(command == 'r'){
-            this->state_->reset();
-        }  else if(command == 's') {
-            this->state_->fault();
-        } else if (command == 'c') {
-            this->state_->clearFault();
-        } else if (command == 'l'){
-            this->state_->on_loop();
-        } else{
-            Serial.print("Invalid command\n\r");
+        switch (command) {
+            case 'r':
+                this->state_->reset();
+                break;
+            case 's':
+                this->state_->fault();
+                break;
+            case 'c':
+                this->state_->clearFault();
+                break;
+            case 'p':
+                this->state_->preOp();
+                break;
+            case 'e':
+                this->state_->set();
+                break;
+            case 'l':
+                this->state_->on_loop();
+                break;
+            default:
+                Serial.println("Invalid command");
         }
     }
 };

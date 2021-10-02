@@ -20,13 +20,20 @@ void TEST_NORMAL_P_controller() {
 }
 
 void TEST_NORMAL_PI_controller() {
-    double K_p = 0.5, K_i = 0.01, T = 10;
+    double K_p = 0.7875, K_i = 4.46, T = 0.01;
     pi_controller motor(K_p, K_i, -1200.0, 1200.0, T);
     double result;
     result = motor.update(1000.0, 500.0);
-    TEST_ASSERT_EQUAL(275, result);
+    //K_p*(1000-500)+K_i*(T)*(1000-500) = 416
+    TEST_ASSERT_EQUAL(416, result);
+    result = motor.update(1000.0, 500.0);
+    //K_p*(1000-500)+K_i*(T)*(500+500) = 438
+    TEST_ASSERT_EQUAL(438, result);
+    result = motor.update(1000.0, 500.0);
+    //K_p*(1000-500)+K_i*(T)*(1000+500) = 460
+    TEST_ASSERT_EQUAL(460, result);
 
-    //proportional = 250
+    //proportional =
     //integral = 25
 }
 

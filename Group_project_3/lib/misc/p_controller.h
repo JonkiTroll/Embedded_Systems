@@ -7,7 +7,7 @@
 
 #include "controller.h"
 
-class p_controller : controller {
+class p_controller : public controller {
 public:
     p_controller(double p,  double limit_min, double limit_max) :
                                                                 controller(0, limit_min, limit_max, 0), K_p(p) {
@@ -28,8 +28,20 @@ public:
         return proportional;
     }
 
+    void reset() override {
+
+    }
+
+    void setProportionalGain( double newValue){
+        K_p = newValue;
+    }
+    double getProportionalGain() const{
+        return K_p;
+    }
+
 private:
-    const double K_p;
+    double K_p;
+
 };
 
 

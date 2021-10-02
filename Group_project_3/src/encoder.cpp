@@ -145,11 +145,19 @@ void encoder::update_speed(int32_t new_speed){
     */
 
     //keeps the output within set limits.
+
+    if (new_speed < 0) {
+        new_speed = -new_speed;
+        PORTB |= (1 << DRV_PIN1);
+
+    } else {
+        PORTB &= ~(1 << DRV_PIN1);
+    }
+
     if ( new_speed > 1200) {
         new_speed =  1200;
-    } else if (new_speed < 100) {
-        new_speed = 100;
     }
+
     //calculate duty cycle as a percentage.
     auto dutyCycle = static_cast<uint16_t>(100*new_speed/top_speed);
 

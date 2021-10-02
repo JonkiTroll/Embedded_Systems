@@ -10,8 +10,9 @@
 #include "main.h"
 
 constexpr double error_threshold = 0.05;
-int period_ms = 10;
-const double Kp = 1.75, Ki = 0.01; //If K_p is = 2.0 and reference speed to 1000, the output oscillates
+const uint16_t period_ms = 10;
+const double Kp = 0.7875, Ki = 4.46; //If K_p is = 2.0 and reference speed to 1000, the output oscillates
+double reference = 1000;
 
 //Ki = Kp/Ti
 
@@ -24,7 +25,7 @@ encoder motor(PIN2, PIN3, period_ms, 0);
 #ifdef USE_P_CONTROLLER
 p_controller speed_controller(Kp, -1200, 1200);
 #else
-pi_controller speed_controller(Kp, Ki, -1200, 1200, 100);
+pi_controller speed_controller(Kp, Ki, -1200, 1200, static_cast<double>(period_ms/1000.0));
 #endif
 
 Digital_out led(5), driver_pin2(motor.getDRV_PIN2());
@@ -59,7 +60,7 @@ void setup(){
     context = new Context(new Initialization);
 }
 
-char command;
+char command = '0';
 
 void loop(){
 

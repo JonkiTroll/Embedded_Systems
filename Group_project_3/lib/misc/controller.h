@@ -9,8 +9,11 @@
 class controller {
 public:
     controller(double t, double limit_min, double limit_max, double sampleT) :
-    tau(t), limMin(limit_min), limMax(limit_max), T(sampleT) {}
+    tau(t), limMin(limit_min), limMax(limit_max), T(sampleT){}
     virtual double update(double setPoint, double measurement) = 0;
+    virtual void reset() = 0;
+
+
 
 protected:
     const double tau;

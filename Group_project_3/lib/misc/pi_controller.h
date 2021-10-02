@@ -7,10 +7,12 @@
 
 #include "controller.h"
 
-class pi_controller : controller{
+class pi_controller : public controller{
 public:
     pi_controller(double p, double i,  double limit_min, double limit_max, double sampleT) :
-            controller(0, limit_min, limit_max, sampleT), K_p(p), K_i(i) {
+            controller(0, limit_min, limit_max, sampleT){
+        K_p = p;
+        K_i = i;
         integrator = 0.0;
 
     }
@@ -60,8 +62,26 @@ public:
         return result;
     }
 
+    void reset() override {
+        integrator = 0.0;
+    }
+
+    void setProportionalGain( double newValue) {
+        K_p = newValue;
+    }
+    double getProportionalGain() const {
+        return K_p;
+    }
+
+    void setIntegralGain( double newValue) {
+        K_i = newValue;
+    }
+    double getIntegralGain() const{
+        return K_i;
+    }
+
 private:
-    const double K_p, K_i;
+    double K_p, K_i;
     double integrator;
 };
 

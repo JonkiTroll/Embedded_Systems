@@ -22,6 +22,9 @@ public:
     void blinkLed() override;
     void reset() override;
     void fault() override;
+    void set() override;
+    void preOp() override;
+    void enterShell();
 private:
     uint16_t counter;
 };

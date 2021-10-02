@@ -13,6 +13,7 @@ void Initialization::on_entry()  {
     // Maybe set here the useage of initalization so that when this restarts, everything is reset.
     // Torfi says no, but not sure.
     cli();
+    speed_controller.reset();
     led.init();
     delay(100);
     led.set_lo();

@@ -22,6 +22,7 @@ public:
     void blinkLed() override;
     void reset() override;
     void fault() override;
+    void preOp() override;
 
 };
 
