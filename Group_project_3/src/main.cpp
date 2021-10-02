@@ -10,7 +10,7 @@
 
 constexpr double error_threshold = 0.05;
 int period_ms = 10;
-const double Kp = 1.0, Ki = 0.01; //If K_p is = 2.0 and reference speed to 1000, the output oscillates
+const double Kp = 1.75, Ki = 0.01; //If K_p is = 2.0 and reference speed to 1000, the output oscillates
 
 //Ki = Kp/Ti
 
