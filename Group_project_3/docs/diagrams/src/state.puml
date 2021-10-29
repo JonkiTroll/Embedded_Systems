@@ -2,6 +2,7 @@
 'https://plantuml.com/state-diagram
 
 scale 350 width
+skinparam defaultFontSize 16
 
 stateInitialization:        Entry: Set variables and initialize systems\n Exit: Send boot message
 statePreOperational:        Entry: Blink led at 1Hz  \n Do: accept parameter changes \n Exit: Disable timer0
