@@ -9,6 +9,8 @@
 #include<stdint.h>
 #include<stdlib.h>
 
+uint16_t modRTU_CRC(uint8_t buf[], int len);
+
 int main(int argc, char *argv[]){
    int file, count;
    if(argc!=3){
@@ -94,4 +96,26 @@ int main(int argc, char *argv[]){
    tcsetattr(file, TCSANOW, &old_options);
    close(file);
    return 0;
+}
+
+
+uint16_t modRTU_CRC(uint8_t buf[], int len)
+{
+  uint16_t crc = 0xFFFF;
+  for (int pos = 0; pos < len; pos++)
+  {
+    crc ^= (uint16_t)buf[pos];
+
+    for (int k = 8; k != 0; k--)
+    {
+      if ((crc & 0x0001) != 0)
+      {
+        crc >>= 1;
+        crc ^= 0xA001;
+      }
+      else
+        crc >>= 1;
+    }
+  }
+  return crc;
 }
