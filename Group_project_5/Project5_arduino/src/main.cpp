@@ -1,6 +1,6 @@
 #include <Arduino.h>
 
-#define MY_ADDR 0x02
+#define MY_ADDR 0x01
 #define MOTOR_ADDR 0x03
 /* Arduino Serial Command Processor */
 
@@ -32,13 +32,9 @@ void loop()
   if (Serial.available() > 0)
   {                                     // bytes received
     Serial.readBytes(message, MSG_LEN); // Read a specific number of bytes
-    if (message[0] == MOTOR_ADDR)
+    if (message[0] == MY_ADDR ) // The message refers to me
     {
-      both = true;
-    }
-    if (message[0] == MY_ADDR || both) // The message refers to me
-    {
-      uint16_t CRC = ((uint16_t)message[MSG_LEN - 2] << 8) | message[MSG_LEN - 1]; // Combining the two bytes to a single 16 bit number.
+      //uint16_t CRC = ((uint16_t)message[MSG_LEN - 2] << 8) | message[MSG_LEN - 1]; // Combining the two bytes to a single 16 bit number.
       if (true) //(CRC == modRTU_CRC(message, MSG_LEN))
       {
         uint8_t function_code = message[1];
@@ -47,8 +43,17 @@ void loop()
         switch (function_code)
         {
         case 0x06: // funcion code 6 is writing a value to a register
+          
+          buffer[0] = message[0];
+          buffer[1] = message[1];
+          buffer[2] = message[2];
+          buffer[3] = message[3];
+          buffer[4] = message[4];
+          buffer[5] = message[5];
+          buffer[6] = message[6];
+          buffer[7] = message[7];
+          Serial.print((char*)buffer);
           val_write(mem_address, msg_value);
-          Serial.print((char)message);
           break;
         case 0x03:
           // Give values
@@ -59,11 +64,12 @@ void loop()
           buffer[3] = message[3];
           buffer[4] = (uint8_t)((val_send >> 8) & 0xFF);
           buffer[5] = (uint8_t)((val_send >> 0) & 0xFF);
-          uint16_t CRC_send = modRTU_CRC(buffer, MSG_LEN);
+          uint16_t CRC_send = 0x4545;//modRTU_CRC(buffer, MSG_LEN);
           buffer[6] = (uint8_t)((CRC_send >> 8) & 0xFF);
           buffer[7] = (uint8_t)((CRC_send >> 0) & 0xFF);
-          Serial.print((char)buffer);
+          Serial.print((char*)buffer);
           break;
+
         default:
           break;
         }
@@ -92,7 +98,7 @@ void val_write(uint16_t address, int16_t value)
 {
 
   digitalWrite(13, HIGH);
-  delay(300);
+  delay(500);
   digitalWrite(13, LOW);
 }
 
