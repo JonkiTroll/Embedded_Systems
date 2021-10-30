@@ -8,7 +8,7 @@ int ledPin = 11;    // LED with PWM brightness control
 size_t MSG_LEN = 8; // I always recieve 8 bytes.
 int level = 0;
 bool both = false;
-int speed = 0;
+int16_t speed = 0;
 
 uint16_t modRTU_CRC(uint8_t buf[], int len);
 void LED_blink(int led_pin, int intensity);
@@ -20,6 +20,7 @@ void setup()
   // A baud rate of 115200 (8-bit with No parity and 1 stop bit)
   Serial.begin(115200, SERIAL_8N1);
   pinMode(ledPin, OUTPUT); // the LED is an output
+  pinMode(13, OUTPUT); // the LED is an output
 }
 
 /*The message consist of: 1 byte for address, 1 byte for command, then depending on the command 2 byte for which (memory)address (what value to obtain)
@@ -85,6 +86,21 @@ void loop()
     }
     both = false;
   }
+}
+
+void val_write(uint16_t address, int16_t value)
+{
+
+  digitalWrite(13, HIGH);
+  delay(300);
+  digitalWrite(13, LOW);
+}
+
+
+uint16_t val_read(uint16_t address)
+{
+
+return 0x45;
 }
 
 void LED_blink(int led_pin, int intensity)
