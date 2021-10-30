@@ -1,6 +1,6 @@
 #include <Arduino.h>
 
-#define MY_ADDR 0x01
+#define MY_ADDR 0x02
 #define MOTOR_ADDR 0x03
 /* Arduino Serial Command Processor */
 
@@ -39,7 +39,7 @@ void loop()
     if (message[0] == MY_ADDR || both) // The message refers to me
     {
       uint16_t CRC = ((uint16_t)message[MSG_LEN - 2] << 8) | message[MSG_LEN - 1]; // Combining the two bytes to a single 16 bit number.
-      if (CRC == modRTU_CRC(message, MSG_LEN))
+      if (true) //(CRC == modRTU_CRC(message, MSG_LEN))
       {
         uint8_t function_code = message[1];
         uint16_t mem_address = ((uint16_t)message[2] << 8) | message[3]; // Combining the two bytes to a single 16 bit number.
@@ -57,11 +57,11 @@ void loop()
           buffer[1] = message[1];
           buffer[2] = message[2];
           buffer[3] = message[3];
-          buffer[4] = ((uint16_t)val_send >> 0) & 0xFF;
-          buffer[5] = ((uint16_t)val_send >> 8) & 0xFF;
+          buffer[4] = (uint8_t)((val_send >> 8) & 0xFF);
+          buffer[5] = (uint8_t)((val_send >> 0) & 0xFF);
           uint16_t CRC_send = modRTU_CRC(buffer, MSG_LEN);
-          buffer[6] = ((uint16_t)CRC_send >> 0) & 0xFF;
-          buffer[7] = ((uint16_t)CRC_send >> 8) & 0xFF;
+          buffer[6] = (uint8_t)((CRC_send >> 8) & 0xFF);
+          buffer[7] = (uint8_t)((CRC_send >> 0) & 0xFF);
           Serial.print((char)buffer);
           break;
         default:
