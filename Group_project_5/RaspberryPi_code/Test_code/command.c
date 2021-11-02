@@ -12,8 +12,9 @@
 uint16_t modRTU_CRC(uint8_t buf[], int len);
 void print_string_hex(uint8_t array[], int len, bool send);
 
-int16_t address;
-int16_t value;
+uint16_t address;
+uint16_t value;
+uint16_t CRC;
 
 int main(int argc, char *argv[])
 {
@@ -27,16 +28,19 @@ int main(int argc, char *argv[])
     size_t MSG_BASE = 8; // Base number of bytes to send, might recieve more, but not for out application
     uint8_t msg[MSG_BASE];
     // argv[0] is simply the name of the process, remember that.
-    msg[0] = atoi(argv[1]);           // slave number (address)
-    msg[1] = atoi(argv[2]);           // function code (3 for reading and 6 for writing)
-    address = (int16_t)atoi(argv[3]); // the address to send
-    msg[2] = (uint8_t)((address >> 8) & 0xFF); // 8 MSB of the address
-    msg[3] = (uint8_t)((address >> 0) & 0xFF); // 8 LSB of the address
-    value   = (int16_t)atoi(argv[4]);
+    msg[0]  = atoi(argv[1]);           // slave number (address)
+    msg[1]  = atoi(argv[2]);           // function code (3 for reading and 6 for writing)
+    address = atoi(argv[3]); // the address to send
+    msg[2]  = (uint8_t)((address >> 8) & 0xFF); // 8 MSB of the address
+    msg[3]  = (uint8_t)((address >> 0) & 0xFF); // 8 LSB of the address
+    value   = atoi(argv[4]);
+    msg[4]  = (uint8_t)((value >> 8) & 0xFF); // 8 MSB of the address
+    msg[5]  = (uint8_t)((value >> 0) & 0xFF); // 8 MSB of the address
+    CRC = modRTU_CRC(msg, MSG_BASE);
+    msg[6]  = (uint8_t)((CRC >> 8) & 0xFF); // 8 MSB of the address
+    msg[7]  = (uint8_t)((CRC >> 0) & 0xFF); // 8 MSB of the address
 
     print_string_hex(msg, MSG_BASE, true);
-    
-
 
     if ((file = open("/dev/ttyS0", O_RDWR | O_NOCTTY | O_NDELAY)) < 0)
     {
@@ -57,23 +61,23 @@ int main(int argc, char *argv[])
     { // ... speed could not be set ...
     }
     options.c_cflag &= ~(PARENB | CSTOPB);
-    // options.c_cc[VTIME]=0; /* no timer */
-    options.c_cc[VMIN] = MSG_LEN; /* minimum number of characters */
+    //options.c_cc[VTIME]=2; /* no timer */
+    options.c_cc[VMIN] = MSG_BASE; /* minimum number of characters */
     tcflush(file, TCIFLUSH);
     tcsetattr(file, TCSANOW, &options);
 
-    // send the string plus the null character
-    if ((count = write(file, &msg, MSG_LEN) < 0))
+    
+    if ((count = write(file, &msg, MSG_BASE) < 0))
     {
         perror("Failed to write to the output\n");
         return -1;
     }
 
-    usleep(100000);
+    usleep(500000);
 
-    unsigned char receive[MSG_LEN];
+    unsigned char receive[MSG_BASE];
 
-    if ((count = read(file, (void *)receive, MSG_LEN)) < 0)
+    if ((count = read(file, (void *)receive, MSG_BASE)) < 0)
     {
         perror("Failed to read from the input\n");
         return -1;
@@ -85,25 +89,7 @@ int main(int argc, char *argv[])
     {
         if (receive[0] == msg[0])
         {
-            printf("The sent command was received back\n");
-            printf("%i\n", receive[1]);
-            switch (receive[1])
-            {
-            case 0xAA:
-                printf("Everything is normal.\n");
-                break;
-
-            case 0xF0:
-                printf("Error 1, value out of range\n");
-                break;
-
-            case 0xFF:
-                printf("Arduino received unknown command\n");
-                break;
-
-            default:
-                printf("Unknown message from Arduino\n");
-            }
+            print_string_hex(receive, MSG_BASE, false); 
         }
         else
         {
@@ -145,7 +131,8 @@ void print_string_hex(uint8_t array[], int len, bool send)
 
    for (int k = 0; k < len; k++)
    {
-      printf("%x ", test[k]);
+      if (array[k]<0x10) printf("0%x ", array[k]);
+      else printf("%x ", array[k]);
    }
    printf("\n");
 }
