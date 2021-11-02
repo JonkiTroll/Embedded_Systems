@@ -12,12 +12,8 @@
 
 
 void preOperational::on_entry(){
-    Serial.println("Entering preOperational");
     this->blinkLed();
-    Serial.println("e: Start motor");
-    Serial.println("r: Reset system");
-    Serial.println("s: Stop system");
-    Serial.println("p: change settings");
+    
 }
 
 void preOperational::on_exit()  {

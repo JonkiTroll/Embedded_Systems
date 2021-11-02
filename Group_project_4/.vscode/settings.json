@@ -1,0 +1,12 @@
+{
+    "sshfs.configs": [
+        {
+            "name": "pi@192.168.43.103",
+            "host": "pi@192.168.43.103",
+            "password": "raspberry"
+        }
+    ],
+    "files.associations": {
+        "string_view": "cpp"
+    }
+}

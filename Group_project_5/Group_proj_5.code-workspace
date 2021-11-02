@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "Arduino_code"
+		},
+		{
+			"path": "Raspberry_code"
+		}
+	],
+	"settings": {}
+}

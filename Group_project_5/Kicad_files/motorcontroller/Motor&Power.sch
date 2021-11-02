@@ -1,0 +1,290 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 3 3
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Connector_Generic:Conn_01x06 J7
+U 1 1 617D1C9F
+P 1700 2600
+F 0 "J7" H 1618 2075 50  0000 C CNN
+F 1 "Motor_Left" H 1618 2166 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x06_P2.54mm_Vertical" H 1700 2600 50  0001 C CNN
+F 3 "~" H 1700 2600 50  0001 C CNN
+	1    1700 2600
+	-1   0    0    1   
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x06 J8
+U 1 1 617D2F27
+P 1700 3950
+F 0 "J8" H 1618 3425 50  0000 C CNN
+F 1 "Motor_Right" H 1618 3516 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x06_P2.54mm_Vertical" H 1700 3950 50  0001 C CNN
+F 3 "~" H 1700 3950 50  0001 C CNN
+	1    1700 3950
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR0118
+U 1 1 617CDC6F
+P 2050 3750
+F 0 "#PWR0118" H 2050 3500 50  0001 C CNN
+F 1 "GND" V 2055 3577 50  0000 C CNN
+F 2 "" H 2050 3750 50  0001 C CNN
+F 3 "" H 2050 3750 50  0001 C CNN
+	1    2050 3750
+	0    -1   -1   0   
+$EndComp
+Text GLabel 1950 3950 2    50   Input ~ 0
+Encoder_A_Right
+Wire Wire Line
+	1950 3950 1900 3950
+Text GLabel 1950 3850 2    50   Input ~ 0
+Encoder_B_Right
+Wire Wire Line
+	1950 3850 1900 3850
+Wire Wire Line
+	2050 4050 1900 4050
+Wire Wire Line
+	2050 3750 1900 3750
+Wire Wire Line
+	3450 2300 1900 2300
+$Comp
+L power:GND #PWR0120
+U 1 1 617DBF0B
+P 2050 2400
+F 0 "#PWR0120" H 2050 2150 50  0001 C CNN
+F 1 "GND" V 2055 2227 50  0000 C CNN
+F 2 "" H 2050 2400 50  0001 C CNN
+F 3 "" H 2050 2400 50  0001 C CNN
+	1    2050 2400
+	0    -1   -1   0   
+$EndComp
+Text GLabel 1950 2600 2    50   Input ~ 0
+Encoder_A_Left
+Wire Wire Line
+	1950 2600 1900 2600
+Text GLabel 1950 2500 2    50   Input ~ 0
+Encoder_B_Left
+Wire Wire Line
+	1950 2500 1900 2500
+Wire Wire Line
+	2050 2700 1900 2700
+Wire Wire Line
+	2050 2400 1900 2400
+$Comp
+L power:GND #PWR0122
+U 1 1 617DF00D
+P 3800 3100
+F 0 "#PWR0122" H 3800 2850 50  0001 C CNN
+F 1 "GND" H 3805 2927 50  0000 C CNN
+F 2 "" H 3800 3100 50  0001 C CNN
+F 3 "" H 3800 3100 50  0001 C CNN
+	1    3800 3100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3850 3000 3850 3050
+Wire Wire Line
+	3850 3050 3800 3050
+Wire Wire Line
+	3800 3050 3800 3100
+Text GLabel 4350 2300 2    50   Input ~ 0
+PWM_Pin_0_Left
+Text GLabel 4350 2400 2    50   Input ~ 0
+PWM_Pin_1_Left
+Wire Wire Line
+	4350 2300 4300 2300
+Wire Wire Line
+	4350 2400 4300 2400
+Text GLabel 4500 2800 2    50   Input ~ 0
+FLT
+Wire Wire Line
+	4500 2800 4300 2800
+Wire Wire Line
+	5100 3000 5100 2500
+Connection ~ 5100 2500
+Text GLabel 4350 2600 2    50   Input ~ 0
+PWM_Pin_0_Right
+Text GLabel 4350 2700 2    50   Input ~ 0
+PWM_Pin_1_Right
+Wire Wire Line
+	4350 2600 4300 2600
+Wire Wire Line
+	4350 2700 4300 2700
+Wire Wire Line
+	1900 2800 2600 2800
+Wire Wire Line
+	2600 2800 2600 2400
+Wire Wire Line
+	2600 2400 3450 2400
+Wire Wire Line
+	3450 2500 3300 2500
+Wire Wire Line
+	3300 2500 3300 4150
+Wire Wire Line
+	3300 4150 1900 4150
+Wire Wire Line
+	3450 2600 3250 2600
+Wire Wire Line
+	3250 2600 3250 3650
+Wire Wire Line
+	3250 3650 1900 3650
+Wire Wire Line
+	4300 2500 5100 2500
+Wire Wire Line
+	3950 3000 5100 3000
+$Comp
+L USER:DC-DCXL6009E1 U2
+U 1 1 617F4DB8
+P 2400 6300
+F 0 "U2" H 2425 6625 50  0000 C CNN
+F 1 "DC-DCXL6009E1" H 2425 6534 50  0000 C CNN
+F 2 "USER:DC-DCXL6009E1" H 2400 6700 50  0001 C CNN
+F 3 "" H 2400 6700 50  0001 C CNN
+	1    2400 6300
+	1    0    0    -1  
+$EndComp
+$Comp
+L USER:DRV8833_breakout_board U3
+U 1 1 617F5E04
+P 3900 2300
+F 0 "U3" H 3875 2525 50  0000 C CNN
+F 1 "DRV8833_breakout_board" H 3875 2434 50  0000 C CNN
+F 2 "USER:DRV8833_breakout_board" H 3900 2550 50  0001 C CNN
+F 3 "" H 3900 2550 50  0001 C CNN
+	1    3900 2300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2000 6200 2100 6200
+$Comp
+L power:GND #PWR0123
+U 1 1 617FC5C9
+P 2950 6500
+F 0 "#PWR0123" H 2950 6250 50  0001 C CNN
+F 1 "GND" H 2955 6327 50  0000 C CNN
+F 2 "" H 2950 6500 50  0001 C CNN
+F 3 "" H 2950 6500 50  0001 C CNN
+	1    2950 6500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2750 6450 2950 6450
+Wire Wire Line
+	2950 6450 2950 6500
+$Comp
+L power:+5V #PWR0124
+U 1 1 617FCEEB
+P 2950 6150
+F 0 "#PWR0124" H 2950 6000 50  0001 C CNN
+F 1 "+5V" H 2965 6323 50  0000 C CNN
+F 2 "" H 2950 6150 50  0001 C CNN
+F 3 "" H 2950 6150 50  0001 C CNN
+	1    2950 6150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2750 6200 2950 6200
+Wire Wire Line
+	2950 6200 2950 6150
+$Comp
+L power:+5V #PWR0125
+U 1 1 617FF014
+P 5100 2350
+F 0 "#PWR0125" H 5100 2200 50  0001 C CNN
+F 1 "+5V" H 5115 2523 50  0000 C CNN
+F 2 "" H 5100 2350 50  0001 C CNN
+F 3 "" H 5100 2350 50  0001 C CNN
+	1    5100 2350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5100 2350 5100 2500
+$Comp
+L Connector_Generic:Conn_01x02 J6
+U 1 1 61801708
+P 750 6750
+F 0 "J6" H 668 6425 50  0000 C CNN
+F 1 "Battery_Connector" H 668 6516 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 750 6750 50  0001 C CNN
+F 3 "~" H 750 6750 50  0001 C CNN
+	1    750  6750
+	-1   0    0    1   
+$EndComp
+Text Label 1750 6350 0    50   ~ 0
+BAT+
+Text Label 1750 6450 0    50   ~ 0
+BAT-
+Wire Wire Line
+	2000 6350 2000 6200
+Wire Wire Line
+	1550 6350 2000 6350
+Wire Notes Line
+	3100 5550 3100 7800
+Wire Notes Line
+	5350 500  5350 5550
+Wire Notes Line
+	500  5550 5350 5550
+Text Notes 700  700  0    50   ~ 0
+Motor driver and motor connectors\n
+Text Notes 550  5700 0    50   ~ 0
+Buck converter and battery connector
+$Comp
+L Switch:SW_SPDT SW2
+U 1 1 618BFD4B
+P 1350 6450
+F 0 "SW2" H 1350 6735 50  0000 C CNN
+F 1 "SW_SPDT" H 1350 6644 50  0000 C CNN
+F 2 "USER:POWER_SWITCH" H 1350 6450 50  0001 C CNN
+F 3 "~" H 1350 6450 50  0001 C CNN
+	1    1350 6450
+	1    0    0    -1  
+$EndComp
+NoConn ~ 1550 6550
+Wire Wire Line
+	950  6750 1650 6750
+Wire Wire Line
+	1650 6750 1650 6450
+Wire Wire Line
+	1650 6450 2100 6450
+Wire Wire Line
+	1050 6450 1050 6650
+Wire Wire Line
+	1050 6650 950  6650
+Wire Wire Line
+	1050 6450 1150 6450
+$Comp
+L power:+5V #PWR0119
+U 1 1 618F45FA
+P 2050 2700
+F 0 "#PWR0119" H 2050 2550 50  0001 C CNN
+F 1 "+5V" V 2065 2873 50  0000 C CNN
+F 2 "" H 2050 2700 50  0001 C CNN
+F 3 "" H 2050 2700 50  0001 C CNN
+	1    2050 2700
+	0    1    1    0   
+$EndComp
+$Comp
+L power:+5V #PWR0121
+U 1 1 618F7AB5
+P 2050 4050
+F 0 "#PWR0121" H 2050 3900 50  0001 C CNN
+F 1 "+5V" V 2065 4223 50  0000 C CNN
+F 2 "" H 2050 4050 50  0001 C CNN
+F 3 "" H 2050 4050 50  0001 C CNN
+	1    2050 4050
+	0    1    1    0   
+$EndComp
+$EndSCHEMATC

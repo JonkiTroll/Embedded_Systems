@@ -30,6 +30,21 @@ pi_controller speed_controller(Kp, Ki, -1200, 1200, static_cast<double>(period_m
 
 Digital_out led(5), driver_pin2(motor.getDRV_PIN2());
 
+/*-------------CAN messages---------------------------*/
+
+constexpr uint8_t CAN_READ = 0x03;
+constexpr uint8_t CAN_WRITE = 0x06;
+
+#ifdef ARDUINO_1
+constexpr uint8_t MOTOR_ADDR = 0x01;
+#else
+constexpr uint8_t MOTOR_ADDR = 0x02;
+#endif
+/*--------------Function prototypes--------------------*/
+
+uint16_t modRTU_CRC(uint8_t buf[], int len);
+
+
 ISR(TIMER1_COMPA_vect) {
     //driver_pin2.set_hi();
     PORTB |= (1<<motor.getDRV_PIN2());
@@ -54,6 +69,9 @@ ISR(INT0_vect) {
         motor.set_pulse_counter(0);
     }
 }
+
+uint8_t parseMessage(char arr[], int length);
+
 void setup(){
 
     Serial.begin(115200);
@@ -73,7 +91,7 @@ void loop(){
             command = Serial.read();
 
         if(motorFault.is_hi()) {
-            command = 's';
+            command = 0x02;
 
          }
 
@@ -89,4 +107,44 @@ void loop(){
     }
     delay(500);
 
+}
+
+uint8_t parseMessage(char arr[], int length) {
+    
+    if(arr[0] == MOTOR_ADDR){
+
+        if(arr[1] == CAN_READ) {
+
+        } else if (arr[1] == CAN_WRITE){
+
+        } else {
+            
+        }
+
+    } else {
+
+    }
+
+    return 0;
+}
+
+uint16_t modRTU_CRC(uint8_t buf[], int len)
+{
+  uint16_t crc = 0xFFFF;
+  for (int pos = 0; pos < len; pos++)
+  {
+    crc ^= (uint16_t)buf[pos];
+
+    for (int k = 8; k != 0; k--)
+    {
+      if ((crc & 0x0001) != 0)
+      {
+        crc >>= 1;
+        crc ^= 0xA001;
+      }
+      else
+        crc >>= 1;
+    }
+  }
+  return crc;
 }

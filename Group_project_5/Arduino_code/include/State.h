@@ -72,21 +72,21 @@ public:
     /**
      * The Context delegates part of its behavior to the current State object.
      */
-    void Request1(char command) {
+    void Request1(uint8_t command) {
         switch (command) {
-            case 'r':
+            case 0x81:
                 this->state_->reset();
                 break;
-            case 's':
+            case 0x02:
                 this->state_->fault();
                 break;
-            case 'c':
+            case 0x82:
                 this->state_->clearFault();
                 break;
-            case 'p':
+            case 0x80:
                 this->state_->preOp();
                 break;
-            case 'e':
+            case 0x01:
                 this->state_->set();
                 break;
             case 'l':
