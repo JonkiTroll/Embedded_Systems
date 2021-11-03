@@ -130,15 +130,7 @@ Wire Wire Line
 Wire Wire Line
 	2600 2400 3450 2400
 Wire Wire Line
-	3450 2500 3300 2500
-Wire Wire Line
-	3300 2500 3300 4150
-Wire Wire Line
 	3300 4150 1900 4150
-Wire Wire Line
-	3450 2600 3250 2600
-Wire Wire Line
-	3250 2600 3250 3650
 Wire Wire Line
 	3250 3650 1900 3650
 Wire Wire Line
@@ -287,4 +279,12 @@ F 3 "" H 2050 4050 50  0001 C CNN
 	1    2050 4050
 	0    1    1    0   
 $EndComp
+Wire Wire Line
+	3250 2500 3250 3650
+Wire Wire Line
+	3250 2500 3450 2500
+Wire Wire Line
+	3300 4150 3300 2600
+Wire Wire Line
+	3300 2600 3450 2600
 $EndSCHEMATC
