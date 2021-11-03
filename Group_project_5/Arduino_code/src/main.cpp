@@ -30,10 +30,11 @@ pi_controller speed_controller(Kp, Ki, -1200, 1200, static_cast<double>(period_m
 
 Digital_out led(5), driver_pin2(motor.getDRV_PIN2());
 
-/*-------------CAN messages---------------------------*/
+/*-------------CAN arrs---------------------------*/
 
 constexpr uint8_t CAN_READ = 0x03;
 constexpr uint8_t CAN_WRITE = 0x06;
+constexpr uint8_t MSG_LEN = 32;
 
 #ifdef ARDUINO_1
 constexpr uint8_t MOTOR_ADDR = 0x01;
@@ -43,7 +44,9 @@ constexpr uint8_t MOTOR_ADDR = 0x02;
 /*--------------Function prototypes--------------------*/
 
 uint16_t modRTU_CRC(uint8_t buf[], int len);
-
+uint8_t parseMessage(char arr[], int length);
+void val_write(uint16_t address, int16_t value);
+int16_t val_read(uint16_t address);
 
 ISR(TIMER1_COMPA_vect) {
     //driver_pin2.set_hi();
@@ -70,7 +73,6 @@ ISR(INT0_vect) {
     }
 }
 
-uint8_t parseMessage(char arr[], int length);
 
 void setup(){
 
@@ -79,20 +81,23 @@ void setup(){
     context = new Context(new Initialization);
 }
 
-char command = '0';
+
 
 void loop(){
 
-    while (command == '0') {
+    char RPI_msg[MSG_LEN];
+    char command = '0';
+
+    while (command = '0') {
 
         context->Request1('l');
 
-        if (Serial.available())
-            command = Serial.read();
-
+        if (Serial.available()){
+            Serial.readBytes(RPI_msg, MSG_LEN);
+            parseMessage(RPI_msg, MSG_LEN);
+        }
         if(motorFault.is_hi()) {
             command = 0x02;
-
          }
 
 
@@ -109,24 +114,87 @@ void loop(){
 
 }
 
+
 uint8_t parseMessage(char arr[], int length) {
     
+    uint8_t buffer[MSG_LEN];
+
     if(arr[0] == MOTOR_ADDR){
-
-        if(arr[1] == CAN_READ) {
-
-        } else if (arr[1] == CAN_WRITE){
-
-        } else {
+        
+        uint8_t function_code = arr[1];
+        uint16_t mem_address = ((uint16_t)arr[2] << 8) | arr[3]; // Combining the two bytes to a single 16 bit number.
+        uint16_t msg_value = ((uint16_t) arr[4] << 8) | arr[5];   // Combining the two bytes to a single 16 bit number.
+        switch (function_code){
+            case CAN_READ:
+                uint16_t val_send = val_read(mem_address);
+                buffer[0] = arr[0];
+                buffer[1] = arr[1];
+                buffer[2] = arr[2];
+                buffer[3] = arr[3];
+                buffer[4] = (uint8_t)((val_send >> 8) & 0xFF);
+                buffer[5] = (uint8_t)((val_send >> 0) & 0xFF);
+                uint16_t CRC_send = 0x4545;//modRTU_CRC(buffer, MSG_LEN);
+                buffer[6] = (uint8_t)((CRC_send >> 8) & 0xFF);
+                buffer[7] = (uint8_t)((CRC_send >> 0) & 0xFF);
+                Serial.print((char*)buffer);
+          
+            break;
             
+            case CAN_WRITE:
+                buffer[0] = arr[0];
+                buffer[1] = arr[1];
+                buffer[2] = arr[2];
+                buffer[3] = arr[3];
+                buffer[4] = arr[4];
+                buffer[5] = arr[5];
+                buffer[6] = arr[6];
+                buffer[7] = arr[7];
+                Serial.write((char*)buffer,MSG_LEN);
+                val_write(mem_address, msg_value);
+                break;
+            default:
+                break;
         }
 
-    } else {
 
     }
 
     return 0;
 }
+
+int16_t val_read(uint16_t address){
+    switch (address) {
+        case 1:
+            return motor.get_average();
+        case 2:
+            return static_cast<int16_t>(speed_controller.getProportionalGain());
+        case 3:
+            return static_cast<int16_t>(speed_controller.getIntegralGain());
+        default:
+            return 0xFFFF;
+        
+    }
+}
+
+void val_write(uint16_t address, int16_t value){
+    switch(address) {
+        case 0:
+            context->Request1(static_cast<uint8_t>(value));
+            break;
+        case 1:
+            reference = static_cast<double>(value);
+            break;
+        case 2:
+            speed_controller.setProportionalGain(static_cast<double>(value));
+            break;
+        case 3:
+            speed_controller.setIntegralGain(static_cast<double>(value));
+        default:
+            break;
+
+    }
+}
+
 
 uint16_t modRTU_CRC(uint8_t buf[], int len)
 {
