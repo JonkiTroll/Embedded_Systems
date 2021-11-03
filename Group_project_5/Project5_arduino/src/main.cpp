@@ -1,6 +1,6 @@
 #include <Arduino.h>
 
-#define MY_ADDR 0x01
+#define MY_ADDR 0x02
 #define MOTOR_ADDR 0x03
 /* Arduino Serial Command Processor */
 
@@ -52,7 +52,7 @@ void loop()
           buffer[5] = message[5];
           buffer[6] = message[6];
           buffer[7] = message[7];
-          Serial.print((char*)buffer);
+          Serial.write((char*)buffer,MSG_LEN);
           val_write(mem_address, msg_value);
           break;
         case 0x03:
