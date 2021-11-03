@@ -1,6 +1,6 @@
 #include <Arduino.h>
 
-#define MY_ADDR 0x02
+#define MY_ADDR 0x01
 #define MOTOR_ADDR 0x03
 /* Arduino Serial Command Processor */
 
@@ -29,12 +29,13 @@ void loop()
 { // loops forever
   unsigned char message[MSG_LEN];
   uint8_t buffer[MSG_LEN]; // stores the return buffer on each loop
+  uint16_t CRC_send;
   if (Serial.available() > 0)
   {                                     // bytes received
     Serial.readBytes(message, MSG_LEN); // Read a specific number of bytes
     if (message[0] == MY_ADDR ) // The message refers to me
     {
-      //uint16_t CRC = ((uint16_t)message[MSG_LEN - 2] << 8) | message[MSG_LEN - 1]; // Combining the two bytes to a single 16 bit number.
+      uint16_t CRC = ((uint16_t)message[MSG_LEN - 2] << 8) | message[MSG_LEN - 1]; // Combining the two bytes to a single 16 bit number.
       if (true) //(CRC == modRTU_CRC(message, MSG_LEN))
       {
         uint8_t function_code = message[1];
@@ -50,8 +51,15 @@ void loop()
           buffer[3] = message[3];
           buffer[4] = message[4];
           buffer[5] = message[5];
-          buffer[6] = message[6];
-          buffer[7] = message[7];
+          // buffer[6] = message[6];
+          // buffer[7] = message[7];
+          CRC_send = modRTU_CRC(buffer, MSG_LEN);
+          buffer[6] = (uint8_t)((CRC_send >> 8) & 0xFF);
+          buffer[7] = (uint8_t)((CRC_send >> 0) & 0xFF);
+          if (CRC == modRTU_CRC(message, MSG_LEN))
+          {
+            buffer[5] = 0xAA;
+          }
           Serial.write((char*)buffer,MSG_LEN);
           val_write(mem_address, msg_value);
           break;
@@ -64,13 +72,14 @@ void loop()
           buffer[3] = message[3];
           buffer[4] = (uint8_t)((val_send >> 8) & 0xFF);
           buffer[5] = (uint8_t)((val_send >> 0) & 0xFF);
-          uint16_t CRC_send = 0x4545;//modRTU_CRC(buffer, MSG_LEN);
+          CRC_send = 0x4545;//modRTU_CRC(buffer, MSG_LEN);
           buffer[6] = (uint8_t)((CRC_send >> 8) & 0xFF);
           buffer[7] = (uint8_t)((CRC_send >> 0) & 0xFF);
           Serial.print((char*)buffer);
           break;
 
         default:
+          //Function not avaliable
           break;
         }
         // no, error message back
@@ -119,7 +128,7 @@ void LED_blink(int led_pin, int intensity)
 uint16_t modRTU_CRC(uint8_t buf[], int len)
 {
   uint16_t crc = 0xFFFF;
-  for (int pos = 0; pos < len; pos++)
+  for (int pos = 0; pos < (len-2); pos++)
   {
     crc ^= (uint16_t)buf[pos];
 
