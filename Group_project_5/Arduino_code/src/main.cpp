@@ -91,7 +91,7 @@ void setup()
 
 void loop()
 {
-    uint8_t RPI_msg[MSG_LEN];
+    uint8_t RPI_msg[MSG_LEN] = {0, 0, 0, 0, 0, 0, 0, 0};
     char command = '0';
 
     while (command == '0')

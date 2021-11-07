@@ -53,7 +53,7 @@ public:
         /* Derivative term */
         differentiator = (2 * K_d * (measurement - prevMeasurement)
                 + (2 * tau - T) * differentiator)
-                / (2 * tau+T)
+                / (2 * tau+T);
 
 
         double result = proportional + integrator + differentiator;

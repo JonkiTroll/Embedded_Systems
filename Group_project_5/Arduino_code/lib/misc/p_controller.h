@@ -10,7 +10,7 @@
 class p_controller : public controller {
 public:
     p_controller(double p,  double limit_min, double limit_max) :
-                                                                controller(0, limit_min, limit_max, 0), K_p(p) {
+                controller(0, limit_min, limit_max, 0), K_p(p) {
 
     }
 
