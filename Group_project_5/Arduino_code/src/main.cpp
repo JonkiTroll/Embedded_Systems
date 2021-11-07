@@ -21,7 +21,7 @@ timer_8bit timer0(10);
 Digital_in motorFault(1);
 Context *context;
 encoder motor(PIN2, PIN3, period_ms, 0);
-Digital_out LED_TEST(4); //Digital is for C-register
+Digital_out LED_TEST(0); //Digital is for C-register
 // P_controller speed_controller(Kp, error_threshold);
 
 #ifdef USE_P_CONTROLLER
@@ -129,10 +129,11 @@ void parseMessage(uint8_t arr[], int length) {
 
     if (arr[0] == MOTOR_ADDR)
     {
+        LED_TEST.toggle();
         uint16_t CRC = ((uint16_t)arr[MSG_LEN - 2] << 8) | arr[MSG_LEN - 1]; // Combining the two bytes to a single 16 bit number.
         if (CRC == modRTU_CRC(arr, MSG_LEN))
         {
-            LED_TEST.set_hi();
+            
             uint8_t function_code = arr[1];
             uint16_t mem_address = ((uint16_t)arr[2] << 8) | arr[3]; // Combining the two bytes to a single 16 bit number.
             uint16_t msg_value = ((uint16_t)arr[4] << 8) | arr[5];   // Combining the two bytes to a single 16 bit number.
@@ -174,8 +175,6 @@ void parseMessage(uint8_t arr[], int length) {
         }
     }
 
-    delay(20);
-    LED_TEST.set_lo();
 }
 
 int16_t val_read(uint16_t address)
