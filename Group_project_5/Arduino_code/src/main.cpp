@@ -40,11 +40,11 @@ constexpr uint8_t MSG_LEN = 32;
 constexpr uint8_t MOTOR_ADDR = 0x01;
 #else
 constexpr uint8_t MOTOR_ADDR = 0x02;
-#endif
+#endif 
 /*--------------Function prototypes--------------------*/
 
 uint16_t modRTU_CRC(uint8_t buf[], int len);
-uint8_t parseMessage(char arr[], int length);
+void parseMessage(char arr[], int length);
 void val_write(uint16_t address, int16_t value);
 int16_t val_read(uint16_t address);
 
@@ -115,7 +115,7 @@ void loop(){
 }
 
 
-uint8_t parseMessage(char arr[], int length) {
+void parseMessage(char arr[], int length) {
     
     uint8_t buffer[MSG_LEN];
 
@@ -159,7 +159,6 @@ uint8_t parseMessage(char arr[], int length) {
 
     }
 
-    return 0;
 }
 
 int16_t val_read(uint16_t address){

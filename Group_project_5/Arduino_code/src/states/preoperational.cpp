@@ -50,7 +50,8 @@ void preOperational::set() {
 }
 
 void preOperational::preOp() {
-    enterShell();
+    //enterShell();
+    
 }
 
 void preOperational::enterShell() {
