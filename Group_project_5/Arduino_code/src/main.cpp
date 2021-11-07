@@ -123,7 +123,7 @@ void loop()
 }
 
 
-void parseMessage(char arr[], int length) {
+void parseMessage(uint8_t arr[], int length) {
     
     uint8_t buffer[MSG_LEN];
 
@@ -174,7 +174,6 @@ void parseMessage(char arr[], int length) {
         }
     }
 
-    return 0;
 }
 
 int16_t val_read(uint16_t address)
@@ -212,7 +211,7 @@ void val_write(uint16_t address, int16_t value)
     }
 }
 
-uint16_t modRTU_CRC(char buf[], int len)
+uint16_t modRTU_CRC(uint8_t buf[], int len)
 {
     uint16_t crc = 0xFFFF;
     for (int pos = 0; pos < (len-2); pos++)
