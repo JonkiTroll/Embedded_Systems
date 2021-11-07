@@ -18,7 +18,7 @@ void preOperational::on_entry(){
 
 void preOperational::on_exit()  {
     timer0.disable();
-    Serial.println("Leaving preOperational");
+    //Serial.println("Leaving preOperational");
 }
 
 void preOperational::on_loop() {
@@ -37,7 +37,7 @@ void preOperational::blinkLed() {
 }
 
 void preOperational::reset()  {
-    Serial.println("Resetting");
+    //Serial.println("Resetting");
     this->context_->TransitionTo(new Initialization);
 }
 
