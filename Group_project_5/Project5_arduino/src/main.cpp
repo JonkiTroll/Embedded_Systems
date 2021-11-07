@@ -27,7 +27,7 @@ void setup()
 Then 2 bytes for the value to be sent to the said (memory)address then two bytes for CRC */
 void loop()
 { // loops forever
-  unsigned char message[MSG_LEN];
+  uint8_t message[MSG_LEN];
   uint8_t buffer[MSG_LEN]; // stores the return buffer on each loop
   uint16_t CRC_send;
   if (Serial.available() > 0)
