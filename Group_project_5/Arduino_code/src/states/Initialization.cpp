@@ -9,7 +9,7 @@
 constexpr uint8_t interrupt_pin = 0;
 
 void Initialization::on_entry()  {
-    Serial.println("Entering Initialization");
+    //Serial.println("Entering Initialization");
     // Maybe set here the useage of initalization so that when this restarts, everything is reset.
     // Torfi says no, but not sure.
     cli();
@@ -27,6 +27,6 @@ void Initialization::on_entry()  {
 
 void Initialization::on_exit() {
 
-    Serial.println("Boot finished");
+    //Serial.println("Boot finished");
 }
 

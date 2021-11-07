@@ -73,7 +73,8 @@ public:
      * The Context delegates part of its behavior to the current State object.
      */
     void Request1(uint8_t command) {
-        switch (command) {
+        switch (command) 
+        {
             case 0x81:
                 this->state_->reset();
                 break;
@@ -93,7 +94,8 @@ public:
                 this->state_->on_loop();
                 break;
             default:
-                Serial.println("Invalid command");
+                //Serial.print("Invalid command");
+                break;
         }
     }
 };

@@ -9,14 +9,14 @@
 #include "main.h"
 
 void Stopped::on_entry() {
-    Serial.println("Entering Stopped");
+    //Serial.println("Entering Stopped");
     this->blinkLed();
 }
 
 void Stopped::on_exit() {
 
     timer0.disable();
-    Serial.println("Exiting Stopped");
+    //Serial.println("Exiting Stopped");
 }
 
 void Stopped::blinkLed() {
@@ -25,7 +25,7 @@ void Stopped::blinkLed() {
 }
 
 void Stopped::clearFault() {
-    Serial.println("Clearing fault");
+    //Serial.println("Clearing fault");
     if (old_context_ == 'o') {
         this->context_->TransitionTo(new Operational);
     } else if (old_context_ == 'p') {

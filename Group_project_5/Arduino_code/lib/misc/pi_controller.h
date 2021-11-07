@@ -8,10 +8,12 @@
 #include "controller.h"
 #include "math.h"
 
-class pi_controller : public controller{
+class pi_controller : public controller
+{
 public:
     pi_controller(double p, double i,  double limit_min, double limit_max, double sampleT) :
-            controller(0, limit_min, limit_max, sampleT){
+            controller(0, limit_min, limit_max, sampleT)
+    {
         K_p = p;
         K_i = i;
         integrator = 0.0;

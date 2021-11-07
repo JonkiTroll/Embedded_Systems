@@ -42,11 +42,11 @@ constexpr uint8_t MSG_LEN = 8;
 constexpr uint8_t MOTOR_ADDR = 0x01;
 #else
 constexpr uint8_t MOTOR_ADDR = 0x02;
-#endif
+#endif 
 /*--------------Function prototypes--------------------*/
 
 uint16_t modRTU_CRC(uint8_t buf[], int len);
-uint8_t parseMessage(uint8_t arr[], int length);
+void parseMessage(uint8_t arr[], int length);
 void val_write(uint16_t address, int16_t value);
 int16_t val_read(uint16_t address);
 
@@ -122,9 +122,9 @@ void loop()
     delay(500);
 }
 
-uint8_t parseMessage(uint8_t arr[], int length)
-{
 
+void parseMessage(uint8_t arr[], int length) {
+    
     uint8_t buffer[MSG_LEN];
 
     if (arr[0] == MOTOR_ADDR)
@@ -151,7 +151,7 @@ uint8_t parseMessage(uint8_t arr[], int length)
                 buffer[7] = (uint8_t)((CRC_send >> 0) & 0xFF);
                 Serial.write((char *)buffer,MSG_LEN);
 
-                return 0;
+                break;
 
             case CAN_WRITE:
                 buffer[0] = arr[0];
@@ -176,7 +176,6 @@ uint8_t parseMessage(uint8_t arr[], int length)
 
     delay(20);
     LED_TEST.set_lo();
-    return 0;
 }
 
 int16_t val_read(uint16_t address)
