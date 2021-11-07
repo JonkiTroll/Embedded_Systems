@@ -174,9 +174,9 @@ uint8_t parseMessage(uint8_t arr[], int length)
         }
     }
 
-    return 0;
     delay(20);
     LED_TEST.set_lo();
+    return 0;
 }
 
 int16_t val_read(uint16_t address)
