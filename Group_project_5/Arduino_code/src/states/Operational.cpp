@@ -7,17 +7,17 @@
 #include "states/Stopped.h"
 #include "main.h"
 
-#define DEBUG
+//#define DEBUG
 
 void Operational::on_entry(){
-    Serial.println("Entering Operational");
+ //   Serial.println("Entering Operational");
     motor.turn_on();
     this->blinkLed();
 }
 
 void Operational::on_exit()  {
     motor.turn_off();
-    Serial.println("Leaving Operational");
+  //  Serial.println("Leaving Operational");
 }
 
 void Operational::on_loop() {
@@ -43,7 +43,7 @@ void Operational::blinkLed() {
 }
 
 void Operational::reset()  {
-    Serial.println("Resetting");
+   // Serial.println("Resetting");
     this->context_->TransitionTo(new Initialization);
 }
 

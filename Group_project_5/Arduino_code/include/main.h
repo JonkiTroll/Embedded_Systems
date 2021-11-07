@@ -14,7 +14,11 @@
 /*
  * Uncomment this to use P controller instead of PI controller
  */
+<<<<<<< HEAD
 //#define USE_P_CONTROLLER
+=======
+// #define USE_P_CONTROLLER
+>>>>>>> 9e9f2517a7731650a2245806cfd852385eb1ac47
 
 #ifdef USE_P_CONTROLLER
 #include "p_controller.h"

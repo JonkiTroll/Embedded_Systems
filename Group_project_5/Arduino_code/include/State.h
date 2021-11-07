@@ -93,7 +93,7 @@ public:
                 this->state_->on_loop();
                 break;
             default:
-                Serial.println("Invalid command");
+                //Serial.print("Invalid command");
         }
     }
 };
