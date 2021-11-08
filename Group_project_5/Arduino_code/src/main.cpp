@@ -40,6 +40,8 @@ constexpr uint8_t CAN_READ = 0x03;
 constexpr uint8_t CAN_WRITE = 0x06;
 constexpr uint8_t MSG_LEN = 8;
 
+#define ARDUINO_1
+
 #ifdef ARDUINO_1
 constexpr uint8_t MOTOR_ADDR = 0x01;
 #else
@@ -219,7 +221,7 @@ uint8_t val_write(uint16_t address, uint16_t value)
     {
     case 0:
         error = context->Request1(value);
-        if(!error) {
+        if(!error){
             return 0;
         } else {
             return error;
