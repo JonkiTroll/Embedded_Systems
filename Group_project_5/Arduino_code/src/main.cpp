@@ -8,7 +8,6 @@
 #include "states/Stopped.h"
 #include "avr/interrupt.h"
 #include "main.h"
-// #include <digital_out.h>
 
 constexpr double error_threshold = 0.05;
 const uint16_t period_ms = 10;
@@ -21,7 +20,7 @@ timer_8bit timer0(10);
 Digital_in motorFault(1);
 Context *context;
 encoder motor(PIN2, PIN3, period_ms, 0);
-Digital_out LED_TEST(0); //Digital is for C-register
+Digital_out LED_TEST(4); //Digital is for C-register
 // P_controller speed_controller(Kp, error_threshold);
 
 #ifdef USE_P_CONTROLLER
@@ -46,8 +45,8 @@ constexpr uint8_t MOTOR_ADDR = 0x02;
 /*--------------Function prototypes--------------------*/
 
 uint16_t modRTU_CRC(uint8_t buf[], int len);
-void parseMessage(uint8_t arr[], int length);
-void val_write(uint16_t address, int16_t value);
+void parseMessage(uint8_t* arr, uint8_t length);
+void val_write(uint16_t address, uint16_t value);
 int16_t val_read(uint16_t address);
 
 ISR(TIMER1_COMPA_vect)
@@ -92,12 +91,12 @@ void setup()
 void loop()
 {
     uint8_t RPI_msg[MSG_LEN] = {0, 0, 0, 0, 0, 0, 0, 0};
-    char command = '0';
+    uint16_t command = 0x0042;
 
-    while (command == '0')
+    while (command == 0x0042)
     {
 
-        context->Request1('l');
+        context->Request1(0x00FF);
 
         if (Serial.available())
         {
@@ -109,10 +108,10 @@ void loop()
             command = 0x02;
         }
     }
-    if (command != '0')
+    if (command != 0x0042)
     {
         context->Request1(command);
-        command = '0';
+        command = 0x0042;
     }
 
     while (motorFault.is_hi())
@@ -123,38 +122,41 @@ void loop()
 }
 
 
-void parseMessage(uint8_t arr[], int length) {
+void parseMessage(uint8_t* arr, uint8_t length) {
     
-    uint8_t buffer[MSG_LEN];
+    uint8_t buffer[length];
 
     if (arr[0] == MOTOR_ADDR)
     {
-        LED_TEST.toggle();
-        uint16_t CRC = ((uint16_t)arr[MSG_LEN - 2] << 8) | arr[MSG_LEN - 1]; // Combining the two bytes to a single 16 bit number.
-        if (CRC == modRTU_CRC(arr, MSG_LEN))
+        
+        uint16_t CRC = ((uint16_t)arr[length - 2] << 8) | arr[length - 1]; // Combining the two bytes to a single 16 bit number.
+        if (CRC == modRTU_CRC(arr, length))
         {
             
             uint8_t function_code = arr[1];
-            uint16_t mem_address = ((uint16_t)arr[2] << 8) | arr[3]; // Combining the two bytes to a single 16 bit number.
-            uint16_t msg_value = ((uint16_t)arr[4] << 8) | arr[5];   // Combining the two bytes to a single 16 bit number.
+            uint16_t mem_address = (uint16_t) ((arr[2] << 8) | arr[3]); // Combining the two bytes to a single 16 bit number.
+            uint16_t msg_value = (uint16_t) ((arr[4] << 8) | arr[5]);   // Combining the two bytes to a single 16 bit number.
+            uint16_t val_send, CRC_send; 
+            
             switch (function_code)
             {
-            case CAN_READ:
-                uint16_t val_send = val_read(mem_address);
+            case 0x03:
+                val_send = val_read(mem_address);
                 buffer[0] = arr[0];
                 buffer[1] = arr[1];
                 buffer[2] = arr[2];
                 buffer[3] = arr[3];
                 buffer[4] = (uint8_t)((val_send >> 8) & 0xFF);
                 buffer[5] = (uint8_t)((val_send >> 0) & 0xFF);
-                uint16_t CRC_send = modRTU_CRC(buffer, MSG_LEN);
+                CRC_send = modRTU_CRC(buffer, length);
                 buffer[6] = (uint8_t)((CRC_send >> 8) & 0xFF);
                 buffer[7] = (uint8_t)((CRC_send >> 0) & 0xFF);
-                Serial.write((char *)buffer,MSG_LEN);
+                Serial.write((char *)buffer,length);
 
                 break;
 
-            case CAN_WRITE:
+            case 0x06:
+                LED_TEST.toggle();
                 buffer[0] = arr[0];
                 buffer[1] = arr[1];
                 buffer[2] = arr[2];
@@ -163,13 +165,14 @@ void parseMessage(uint8_t arr[], int length) {
                 buffer[5] = arr[5];
                 buffer[6] = arr[6];
                 buffer[7] = arr[7];
-                Serial.write((char *)buffer, MSG_LEN);
+                Serial.write((char *) buffer, length);
                 val_write(mem_address, msg_value);
                 break;
+                
             default:
                 buffer[0] = arr[0];
                 buffer[1] = (arr[1] | 1<<8);
-                Serial.write((char *)buffer, MSG_LEN);
+                Serial.write((char *)buffer, length);
                 break;
             }
         }
@@ -192,12 +195,12 @@ int16_t val_read(uint16_t address)
     }
 }
 
-void val_write(uint16_t address, int16_t value)
+void val_write(uint16_t address, uint16_t value)
 {
     switch (address)
     {
     case 0:
-        context->Request1(static_cast<uint8_t>(value));
+        context->Request1(value);
         break;
     case 1:
         reference = static_cast<double>(value);
@@ -212,6 +215,8 @@ void val_write(uint16_t address, int16_t value)
     }
 }
 
+
+//Cyclic redundancy check
 uint16_t modRTU_CRC(uint8_t buf[], int len)
 {
     uint16_t crc = 0xFFFF;
