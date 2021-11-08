@@ -130,7 +130,7 @@ U 1 1 617AEF73
 P 4000 1550
 F 0 "U1" H 4000 1975 50  0000 C CNN
 F 1 "Logic_Level_Shifter" H 4000 1884 50  0000 C CNN
-F 2 "USER:DRV8833_breakout_board" H 4000 2000 50  0001 C CNN
+F 2 "USER:Logic_level_converter_breakout" H 4000 2000 50  0001 C CNN
 F 3 "" H 4000 2000 50  0001 C CNN
 	1    4000 1550
 	1    0    0    -1  

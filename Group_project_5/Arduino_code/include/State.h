@@ -75,19 +75,19 @@ public:
     void Request1(uint16_t command) {
         switch (command) 
         {
-            case 0x0081:
+            case 81:
                 this->state_->reset();
                 break;
-            case 0x0002:
+            case 2:
                 this->state_->fault();
                 break;
-            case 0x0082:
+            case 82:
                 this->state_->clearFault();
                 break;
-            case 0x0080:
+            case 80:
                 this->state_->preOp();
                 break;
-            case 0x0001:
+            case 1:
                 this->state_->set();
                 break;
             case 0x00FF:

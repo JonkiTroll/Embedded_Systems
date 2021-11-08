@@ -88,10 +88,12 @@ void setup()
     context = new Context(new Initialization);
 }
 
+uint16_t command = 0x0042;
+uint8_t RPI_msg[MSG_LEN] = {0, 0, 0, 0, 0, 0, 0, 0};
+
 void loop()
 {
-    uint8_t RPI_msg[MSG_LEN] = {0, 0, 0, 0, 0, 0, 0, 0};
-    uint16_t command = 0x0042;
+    
 
     while (command == 0x0042)
     {
@@ -105,13 +107,14 @@ void loop()
         }
         if (motorFault.is_hi())
         {
-            command = 0x02;
+            command = 0x0002;
         }
     }
     if (command != 0x0042)
     {
         context->Request1(command);
         command = 0x0042;
+        RPI_msg[0] = 0xFF;
     }
 
     while (motorFault.is_hi())
