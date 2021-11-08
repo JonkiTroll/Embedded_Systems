@@ -72,31 +72,31 @@ public:
     /**
      * The Context delegates part of its behavior to the current State object.
      */
-    void Request1(uint16_t command) {
+    uint8_t Request1(uint16_t command) {
         switch (command) 
         {
             case 81:
                 this->state_->reset();
-                break;
+                return 0;
             case 2:
                 this->state_->fault();
-                break;
+                return 0;
             case 82:
                 this->state_->clearFault();
-                break;
+                return 0;
             case 80:
                 this->state_->preOp();
-                break;
+                return 0;
             case 1:
                 this->state_->set();
-                break;
+                return 0;
             case 0x00FF:
                 this->state_->on_loop();
-                break;
+                return 0;
             default:
-                break;
+                return 3;
                 //Serial.print("Invalid command");
-                break;
+                
         }
     }
 };

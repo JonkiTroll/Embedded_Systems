@@ -23,10 +23,13 @@ encoder motor(PIN2, PIN3, period_ms, 0);
 Digital_out LED_TEST(4); //Digital is for C-register
 // P_controller speed_controller(Kp, error_threshold);
 
+constexpr uint16_t max_val = 1200;
+constexpr uint16_t min_val = -1200;
+
 #ifdef USE_P_CONTROLLER
 p_controller speed_controller(Kp, -1200, 1200);
 #else
-pi_controller speed_controller(Kp, Ki, -1200, 1200, static_cast<double>(period_ms / 1000.0));
+pi_controller speed_controller(Kp, Ki, min_val, max_val, static_cast<double>(period_ms / 1000.0));
 #endif
 
 Digital_out led(5), driver_pin2(motor.getDRV_PIN2());
@@ -46,7 +49,7 @@ constexpr uint8_t MOTOR_ADDR = 0x02;
 
 uint16_t modRTU_CRC(uint8_t buf[], int len);
 void parseMessage(uint8_t* arr, uint8_t length);
-void val_write(uint16_t address, uint16_t value);
+uint8_t val_write(uint16_t address, uint16_t value);
 int16_t val_read(uint16_t address);
 
 ISR(TIMER1_COMPA_vect)
@@ -128,7 +131,7 @@ void loop()
 void parseMessage(uint8_t* arr, uint8_t length) {
     
     uint8_t buffer[length];
-
+    uint8_t error;
     if (arr[0] == MOTOR_ADDR)
     {
         
@@ -159,17 +162,28 @@ void parseMessage(uint8_t* arr, uint8_t length) {
                 break;
 
             case 0x06:
-                LED_TEST.toggle();
-                buffer[0] = arr[0];
-                buffer[1] = arr[1];
-                buffer[2] = arr[2];
-                buffer[3] = arr[3];
-                buffer[4] = arr[4];
-                buffer[5] = arr[5];
-                buffer[6] = arr[6];
-                buffer[7] = arr[7];
-                Serial.write((char *) buffer, length);
-                val_write(mem_address, msg_value);
+                error = val_write(mem_address, msg_value);
+                if(!error){
+                    buffer[0] = arr[0];
+                    buffer[1] = arr[1];
+                    buffer[2] = arr[2];
+                    buffer[3] = arr[3];
+                    buffer[4] = arr[4];
+                    buffer[5] = arr[5];
+                    buffer[6] = arr[6];
+                    buffer[7] = arr[7];
+                    Serial.write((char *) buffer, length);
+                
+                } else {
+                    buffer[0] = arr[0];
+                    buffer[1] = (arr[1] | error<<8);
+                    buffer[3] = 0x00;
+                    buffer[4] = 0x00;
+                    buffer[5] = 0x00;
+                    buffer[6] = arr[6];
+                    buffer[7] = arr[7];
+                    Serial.write((char *)buffer, length);
+                }
                 break;
                 
             default:
@@ -194,27 +208,36 @@ int16_t val_read(uint16_t address)
     case 3:
         return static_cast<int16_t>(speed_controller.getIntegralGain());
     default:
-        return 0xFFFF;
+        return 2;
     }
 }
 
-void val_write(uint16_t address, uint16_t value)
+uint8_t val_write(uint16_t address, uint16_t value)
 {
+    uint8_t error;
     switch (address)
     {
     case 0:
-        context->Request1(value);
-        break;
+        error = context->Request1(value);
+        if(!error) {
+            return 0;
+        } else {
+            return error;
+        }
     case 1:
-        reference = static_cast<double>(value);
-        break;
+        if(value < max_val || value > min_val){
+            reference = static_cast<double>(value);
+            return 0;
+        } else {
+            return 3;
+        }
     case 2:
         speed_controller.setProportionalGain(static_cast<double>(value));
-        break;
+        return 0;
     case 3:
         speed_controller.setIntegralGain(static_cast<double>(value));
     default:
-        break;
+        return 2;
     }
 }
 
