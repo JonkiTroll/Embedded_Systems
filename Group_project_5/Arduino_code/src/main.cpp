@@ -9,6 +9,9 @@
 #include "avr/interrupt.h"
 #include "main.h"
 
+
+#define ARDUINO_1
+
 constexpr double error_threshold = 0.05;
 const uint16_t period_ms = 10;
 const double Kp = 0.7875, Ki = 4.46; // If K_p is = 2.0 and reference speed to 1000, the output oscillates
@@ -19,6 +22,7 @@ double reference = 500;
 timer_8bit timer0(10);
 Digital_in motorFault(1);
 Context *context;
+
 encoder motor(PIN2, PIN3, period_ms, 0);
 Digital_out LED_TEST(4); //Digital is for C-register
 // P_controller speed_controller(Kp, error_threshold);
@@ -40,7 +44,6 @@ constexpr uint8_t CAN_READ = 3;
 constexpr uint8_t CAN_WRITE = 6;
 constexpr uint8_t MSG_LEN = 8;
 
-//#define ARDUINO_1
 
 #ifdef ARDUINO_1
 constexpr uint8_t MOTOR_ADDR = 0x01;

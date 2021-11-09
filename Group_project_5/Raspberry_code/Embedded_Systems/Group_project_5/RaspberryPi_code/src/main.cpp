@@ -13,7 +13,7 @@
 
 using namespace std;
 
-constexpr int16_t ref_speed = 800;
+constexpr int16_t ref_speed = 500;
 
 bool quit = false;
 mutex busMutex;
@@ -31,9 +31,6 @@ typedef struct direction {
     bool left;
     bool right;
 };
-
-
-
 
 void ir_monitoring() {
 
@@ -66,36 +63,45 @@ void ir_monitoring() {
         read(pin22fd, &pin22_val, 1);
         read(pin23fd, &pin23_val, 1);
 
+        //printf("%c, %c\n", pin23_val, pin22_val);
+
         close(pin22fd);
         close(pin23fd);
 
-        if(!dir.forwards && !pin22_val && !pin23_val) {
+        if(!dir.forwards && (pin22_val==48) && (pin23_val==48)) {
+            busMutex.lock();
             forward();
+            busMutex.unlock();
             dir.forwards = true;
             dir.backwards = false;
             dir.left = false;
             dir.right = false;
-        } else if(!dir.left && pin22_val && !pin23_val) {
+        } else if(!dir.left && !(pin22_val==48) && (pin23_val==48)) {
+            busMutex.lock();
             left();
+            busMutex.unlock();
             dir.forwards = false;
             dir.backwards = false;
             dir.left = true;
             dir.right = false;
-        } else if(!dir.right && !pin22_val && pin23_val) {
+        } else if(!dir.right && (pin22_val==48) && !(pin23_val==48)) {
+            busMutex.lock();
             right();
+            busMutex.unlock();
             dir.forwards = false;
             dir.backwards = false;
             dir.left = false;
             dir.right = true;
-        } else if (!dir.backwards && pin22_val && pin23_val){
+        } else if (!dir.backwards && !(pin22_val==48) && !(pin23_val==48)){
+            busMutex.lock();
             backward();
+            busMutex.unlock();
             dir.forwards = false;
             dir.backwards = true;
             dir.left = false;
             dir.right = false;
         }
         
-        usleep(150'000);
 
     }
 
@@ -184,15 +190,15 @@ int main(int argc, char** argv) {
     bus.send(1, 1, 800);
     bus.send(2, 1, 800);
     
-    //thread controlLoop(ir_monitoring);
-    thread LogThread(log_speed, argv[1]);
+    thread controlLoop(ir_monitoring);
+    //thread LogThread(log_speed, argv[1]);
     thread TerminalThread(readTerminal);
     
     
 
     TerminalThread.join();
-    //controlLoop.join();
-    LogThread.join();
+    controlLoop.join();
+    //LogThread.join();
 
 
     bus.send(1, 0, 80);
@@ -217,11 +223,11 @@ void backward() {
 void left() {
 
     bus.send(1, 1, ref_speed);
-    bus.send(2, 1, ref_speed*0.5);
+    bus.send(2, 1, ref_speed*0.00);
 }
 
 void right() {
 
-    bus.send(1, 1, ref_speed*0.5);
+    bus.send(1, 1, ref_speed*0.00);
     bus.send(2, 1, ref_speed);
 }
