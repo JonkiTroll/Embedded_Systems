@@ -145,8 +145,8 @@ uint16_t modRTU_CRC(uint8_t buf[], int len)
 
 void print_string_hex(uint8_t array[], int len, bool send)
 {
-   if (send) printf("Sent request:   ");
-   else printf("Recieved reply: ");
+   //if (send) printf("Sent request:   ");
+   //else printf("Recieved reply: ");
 
    for (int k = 0; k < len; k++)
    {

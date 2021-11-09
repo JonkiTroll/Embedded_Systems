@@ -23,8 +23,8 @@ encoder motor(PIN2, PIN3, period_ms, 0);
 Digital_out LED_TEST(4); //Digital is for C-register
 // P_controller speed_controller(Kp, error_threshold);
 
-constexpr uint16_t max_val = 1200;
-constexpr uint16_t min_val = -1200;
+constexpr int16_t max_val = 1200;
+constexpr int16_t min_val = -1200;
 
 #ifdef USE_P_CONTROLLER
 p_controller speed_controller(Kp, -1200, 1200);
@@ -36,11 +36,11 @@ Digital_out led(5), driver_pin2(motor.getDRV_PIN2());
 
 /*-------------CAN arrs---------------------------*/
 
-constexpr uint8_t CAN_READ = 0x03;
-constexpr uint8_t CAN_WRITE = 0x06;
+constexpr uint8_t CAN_READ = 3;
+constexpr uint8_t CAN_WRITE = 6;
 constexpr uint8_t MSG_LEN = 8;
 
-#define ARDUINO_1
+//#define ARDUINO_1
 
 #ifdef ARDUINO_1
 constexpr uint8_t MOTOR_ADDR = 0x01;
@@ -51,7 +51,7 @@ constexpr uint8_t MOTOR_ADDR = 0x02;
 
 uint16_t modRTU_CRC(uint8_t buf[], int len);
 void parseMessage(uint8_t* arr, uint8_t length);
-uint8_t val_write(uint16_t address, uint16_t value);
+uint8_t val_write(uint16_t address, int16_t value);
 int16_t val_read(uint16_t address);
 
 ISR(TIMER1_COMPA_vect)
@@ -143,7 +143,7 @@ void parseMessage(uint8_t* arr, uint8_t length) {
             
             uint8_t function_code = arr[1];
             uint16_t mem_address = (uint16_t) ((arr[2] << 8) | arr[3]); // Combining the two bytes to a single 16 bit number.
-            uint16_t msg_value = (uint16_t) ((arr[4] << 8) | arr[5]);   // Combining the two bytes to a single 16 bit number.
+            int16_t msg_value = (int16_t) ((arr[4] << 8) | arr[5]);   // Combining the two bytes to a single 16 bit number.
             uint16_t val_send, CRC_send; 
             
             switch (function_code)
@@ -205,16 +205,12 @@ int16_t val_read(uint16_t address)
     {
     case 1:
         return motor.get_average();
-    case 2:
-        return static_cast<int16_t>(speed_controller.getProportionalGain());
-    case 3:
-        return static_cast<int16_t>(speed_controller.getIntegralGain());
     default:
         return 2;
     }
 }
 
-uint8_t val_write(uint16_t address, uint16_t value)
+uint8_t val_write(uint16_t address, int16_t value)
 {
     uint8_t error;
     switch (address)
@@ -233,11 +229,7 @@ uint8_t val_write(uint16_t address, uint16_t value)
         } else {
             return 3;
         }
-    case 2:
-        speed_controller.setProportionalGain(static_cast<double>(value));
-        return 0;
-    case 3:
-        speed_controller.setIntegralGain(static_cast<double>(value));
+    
     default:
         return 2;
     }
