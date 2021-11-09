@@ -13,7 +13,7 @@
 
 using namespace std;
 
-constexpr int16_t ref_speed = 500;
+constexpr int16_t ref_speed = 1199;
 
 bool quit = false;
 mutex busMutex;
@@ -191,14 +191,14 @@ int main(int argc, char** argv) {
     bus.send(2, 1, 800);
     
     thread controlLoop(ir_monitoring);
-    //thread LogThread(log_speed, argv[1]);
+    thread LogThread(log_speed, argv[1]);
     thread TerminalThread(readTerminal);
     
     
 
     TerminalThread.join();
     controlLoop.join();
-    //LogThread.join();
+    LogThread.join();
 
 
     bus.send(1, 0, 80);
