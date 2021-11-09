@@ -113,7 +113,7 @@ void log_speed(char* filename) {
     while(!quit){
 
         busMutex.lock();
-       // val_left = bus.receive(1, 1);
+        val_left = bus.receive(1, 1);
         val_right = bus.receive(1, 1);
         busMutex.unlock();
         auto current_time = chrono::high_resolution_clock::now();
