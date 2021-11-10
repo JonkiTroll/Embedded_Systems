@@ -163,10 +163,10 @@ void readTerminal(){
 
 int main(int argc, char** argv) {
 
-    if(argc != 2) {
+    /*if(argc != 2) {
         cout << "ERROR, invalid number of arguements\n";
         return 0;
-    }
+    }*/
     
     bus.send(1, 0, 80);
     bus.send(2, 0, 80);
@@ -175,7 +175,7 @@ int main(int argc, char** argv) {
     bus.send(2, 1, ref_speed);
     
     thread controlLoop(ir_monitoring);
-    thread LogThread(log_speed, argv[1]);
+    thread LogThread(log_speed, "logging/Log.txt");
     thread TerminalThread(readTerminal);
     
     
