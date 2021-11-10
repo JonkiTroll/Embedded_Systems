@@ -84,7 +84,7 @@ F 3 "~" H 6000 1400 50  0001 C CNN
 F 4 "Y" H 6000 1400 50  0001 L CNN "Spice_Netlist_Enabled"
 F 5 "D" H 6000 1400 50  0001 L CNN "Spice_Primitive"
 	1    6000 1400
-	0    -1   -1   0   
+	0    1    1    0   
 $EndComp
 $Comp
 L power:+5V #PWR0103
@@ -329,7 +329,7 @@ F 3 "~" H 8500 1400 50  0001 C CNN
 F 4 "Y" H 8500 1400 50  0001 L CNN "Spice_Netlist_Enabled"
 F 5 "D" H 8500 1400 50  0001 L CNN "Spice_Primitive"
 	1    8500 1400
-	0    -1   -1   0   
+	0    1    1    0   
 $EndComp
 $Comp
 L Simulation_SPICE:DIODE D1

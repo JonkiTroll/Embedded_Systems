@@ -4,10 +4,10 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 3
-Title ""
-Date ""
-Rev ""
-Comp ""
+Title "RC Tank - Controllers and bus"
+Date "2021-11-02"
+Rev "V0.1"
+Comp "Reykjavik university"
 Comment1 ""
 Comment2 ""
 Comment3 ""

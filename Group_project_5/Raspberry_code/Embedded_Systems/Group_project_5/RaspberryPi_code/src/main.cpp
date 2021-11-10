@@ -13,7 +13,7 @@
 
 using namespace std;
 
-constexpr int16_t ref_speed = 1199;
+constexpr int16_t ref_speed = 800;
 
 bool quit = false;
 mutex busMutex;
@@ -25,11 +25,12 @@ void backward();
 void left();
 void right();
 
-typedef struct direction {
-    bool forwards;
-    bool backwards;
-    bool left;
-    bool right;
+
+enum direction {
+    forwards,
+    backwards,
+    lefts,
+    rights,
 };
 
 void ir_monitoring() {
@@ -49,57 +50,40 @@ void ir_monitoring() {
 
     
     uint8_t pin22_val, pin23_val;
-    direction dir = {
-        false,
-        false,
-        false,
-        false,
-    };
-
+    
     while(!quit) {
         int pin22fd = open("/sys/class/gpio/gpio22/value", O_RDONLY);
         int pin23fd = open("/sys/class/gpio/gpio23/value", O_RDONLY);
 
         read(pin22fd, &pin22_val, 1);
         read(pin23fd, &pin23_val, 1);
-
+        direction dir;
         //printf("%c, %c\n", pin23_val, pin22_val);
 
         close(pin22fd);
         close(pin23fd);
-
-        if(!dir.forwards && (pin22_val==48) && (pin23_val==48)) {
+        
+        //Only act if the direction needs to be changed.
+        if((dir != forwards) && (pin22_val==48) && (pin23_val==48)) {
             busMutex.lock();
             forward();
             busMutex.unlock();
-            dir.forwards = true;
-            dir.backwards = false;
-            dir.left = false;
-            dir.right = false;
-        } else if(!dir.left && !(pin22_val==48) && (pin23_val==48)) {
+            dir = forwards;
+        } else if((dir != lefts) && !(pin22_val==48) && (pin23_val==48)) {
             busMutex.lock();
             left();
             busMutex.unlock();
-            dir.forwards = false;
-            dir.backwards = false;
-            dir.left = true;
-            dir.right = false;
-        } else if(!dir.right && (pin22_val==48) && !(pin23_val==48)) {
+            dir = lefts;
+        } else if((dir != rights) && (pin22_val==48) && !(pin23_val==48)) {
             busMutex.lock();
             right();
             busMutex.unlock();
-            dir.forwards = false;
-            dir.backwards = false;
-            dir.left = false;
-            dir.right = true;
-        } else if (!dir.backwards && !(pin22_val==48) && !(pin23_val==48)){
+            dir = rights;
+        } else if ((dir != backwards) && !(pin22_val==48) && !(pin23_val==48)){
             busMutex.lock();
             backward();
             busMutex.unlock();
-            dir.forwards = false;
-            dir.backwards = true;
-            dir.left = false;
-            dir.right = false;
+            dir = backwards;
         }
         
 
@@ -187,8 +171,8 @@ int main(int argc, char** argv) {
     bus.send(1, 0, 80);
     bus.send(2, 0, 80);
 
-    bus.send(1, 1, 800);
-    bus.send(2, 1, 800);
+    bus.send(1, 1, ref_speed);
+    bus.send(2, 1, ref_speed);
     
     thread controlLoop(ir_monitoring);
     thread LogThread(log_speed, argv[1]);
@@ -222,12 +206,12 @@ void backward() {
 
 void left() {
 
-    bus.send(1, 1, ref_speed);
-    bus.send(2, 1, ref_speed*0.00);
+    bus.send(1, 1, ref_speed*1.25);
+    bus.send(2, 1, ref_speed*0.75);
 }
 
 void right() {
 
-    bus.send(1, 1, ref_speed*0.00);
-    bus.send(2, 1, ref_speed);
+    bus.send(1, 1, ref_speed*0.75);
+    bus.send(2, 1, ref_speed*1.25);
 }

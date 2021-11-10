@@ -125,10 +125,7 @@ void loop()
         RPI_msg[0] = 0xFF;
     }
 
-    while (motorFault.is_hi())
-    {
-        Serial.read(); // Keep serial from placing in buffer. Any commands entered here should be discarded.
-    }
+    
     delay(500);
 }
 
